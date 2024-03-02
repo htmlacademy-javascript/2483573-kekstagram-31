@@ -28,11 +28,8 @@ const generateRandomComment =  function ()  {
   ];
   const avatarMin = 0;
   const avatarMax = 5;
-  let id = 1;
   const getMessageIndex = getRandomNumber(0, messages.length - 1);
   const getNamesIndex = getRandomNumber(0, names.length - 1);
-  const avatarId = getRandomNumber(avatarMin, avatarMax);
-  return () => {
       const comment = {};
       const avatarId = getRandomNumber(avatarMin, avatarMax);
       comment.id = getRandomNumber(1,150);
@@ -41,7 +38,7 @@ const generateRandomComment =  function ()  {
       comment.name = names[getNamesIndex];
       id++;
       return comment;
-  };
+
 }
 
 
