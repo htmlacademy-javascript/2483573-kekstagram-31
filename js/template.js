@@ -22,7 +22,7 @@ createdPhotos.forEach(({url, description, likes, comments}) => {
   photosParts.querySelector('img').src = url;
   photosParts.querySelector('img').alt = description;
   photosParts.querySelector('.picture__likes').textContent = likes;
-  photosParts.querySelector('.picture__comments').textContent = comments;
+  photosParts.querySelector('.picture__comments').textContent = comments.length;
   createdPhotosFragment.append(photosParts);
 });
 photosList.append(createdPhotosFragment);
