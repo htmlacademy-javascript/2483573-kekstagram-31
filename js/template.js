@@ -10,18 +10,19 @@
 */
 import { generatePhotosArray } from './post.js';
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
 const createdPhotos = generatePhotosArray();
+
 const createdPhotosFragment = document.createDocumentFragment();
+
 const photosList = document.querySelector('.pictures');
 
-createdPhotos.forEach(({url,description,likes,comments}) => {
+createdPhotos.forEach(({url, description, likes, comments}) => {
   const photosParts = picturesTemplate.cloneNode(true);
-  photosParts.querySelector('src').textContent = url;
-  photosParts.querySelector('alt').textContent = description;
-  photosParts.querySelector('likes').textContent = likes;
-  photosParts.querySelector('comments').textContent = comments;
+  photosParts.querySelector('img').src = url;
+  photosParts.querySelector('img').alt = description;
+  photosParts.querySelector('.picture__likes').textContent = likes;
+  photosParts.querySelector('.picture__comments').textContent = comments;
   createdPhotosFragment.append(photosParts);
-
 });
-
 photosList.append(createdPhotosFragment);
