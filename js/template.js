@@ -9,6 +9,7 @@
 Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
 */
 import { generatePhotosArray } from './post.js';
+import{openBigPhoto} from './openCloseFullPhoto.js';
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const createdPhotos = generatePhotosArray();
@@ -17,12 +18,18 @@ const createdPhotosFragment = document.createDocumentFragment();
 
 const photosList = document.querySelector('.pictures');
 
-createdPhotos.forEach(({url, description, likes, comments}) => {
+createdPhotos.forEach(({url, description, likes, comments, id}) => {
   const photosParts = picturesTemplate.cloneNode(true);
   photosParts.querySelector('img').src = url;
   photosParts.querySelector('img').alt = description;
   photosParts.querySelector('.picture__likes').textContent = likes;
   photosParts.querySelector('.picture__comments').textContent = comments.length;
+  photosParts.dataset.id = id;
+  photosParts.addEventListener('click',(event) => {
+    const curentPicture = createdPhotos.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
+    openBigPhoto(curentPicture);
+  });
   createdPhotosFragment.append(photosParts);
 });
 photosList.append(createdPhotosFragment);
+export{photosList,createdPhotosFragment};

@@ -34,8 +34,8 @@ const generateRandomComment = function () {
     'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
     'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
   ];
-  const avatarMin = 0;
-  const avatarMax = 5;
+  const avatarMin = 1;
+  const avatarMax = 6;
   const getMessageIndex = getRandomNumber(0, messages.length - 1);
   const getNamesIndex = getRandomNumber(0, names.length - 1);
   const comment = {};
