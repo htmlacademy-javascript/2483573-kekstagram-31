@@ -1,4 +1,4 @@
-import { getRandomNumber, generateRandomComment } from "./util.js";
+import { getRandomNumber, generateRandomComment } from './util.js';
 
 const commentMin = 0;
 const commentMax = 30;
@@ -13,7 +13,7 @@ const generatePhoto = function () {
   const photo = {};
   photo.id = getRandomNumber(1, 25);
   photo.url = url;
-  photo.description = "Описание фото";
+  photo.description = 'Описание фото';
   photo.likes = getRandomNumber(15, 200);
   photo.comments = Array.from({ length: commentsNum }, generateRandomComment);
   return photo;
@@ -24,4 +24,4 @@ const generatePhotosArray = function generatePhotosArray() {
   const photosNum = 25;
   return Array.from({ length: photosNum }, generatePhoto);
 };
-export { generatePhotosArray };
+export {generatePhotosArray,generatePhoto};
