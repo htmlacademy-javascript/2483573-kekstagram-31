@@ -1,12 +1,12 @@
 import { getRandomNumber, generateRandomComment } from './util.js';
 
-const commentMin = 0;
-const commentMax = 30;
-const urlMin = 1;
-const urlMax = 25;
 
 // Функция для создания объекта фото
 const generatePhoto = function () {
+  const commentMin = 0;
+  const commentMax = 30;
+  const urlMin = 1;
+  const urlMax = 25;
   const urlIndex = getRandomNumber(urlMin, urlMax);
   const url = `photos/${urlIndex}.jpg`;
   const commentsNum = getRandomNumber(commentMin, commentMax);
