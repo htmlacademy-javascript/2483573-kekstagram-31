@@ -1,5 +1,5 @@
 let commentsArr = [];
-let currentComments = 5;
+let currentComments = 0;
 const CommentsStep = 5;
 const socialComments = document.querySelector('.social__comments');
 const commentsCount = document.querySelector('.social__comment-count');
@@ -11,6 +11,7 @@ const loadAllComments = () => {
 
   const socialCommentFragment = document.createDocumentFragment();
   commentsCount.classList.remove('hidden');
+  currentComments += CommentsStep;
   const loadedComments = commentsArr.slice(currentComments, currentComments + CommentsStep);
   //const loadedCommentsLength = loadedComments.length += CommentsStep;
 
@@ -33,7 +34,7 @@ const loadAllComments = () => {
   if (currentComments >= commentsArr.length) {
     commentsLoader.classList.add('hidden');
   }
-  currentComments += CommentsStep;
+
 };
 const clear = () => {
   socialComments.innerHTML = '';
