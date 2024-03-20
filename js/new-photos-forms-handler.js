@@ -1,4 +1,4 @@
-const regex = /^#[a-zа-яё0-9]{1,19}$i/;
+const regex = /^#[a-zа-яё0-9]{1,19}$/igm;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
@@ -14,9 +14,9 @@ const removeOnEsc = (event) => {
 };
 
 const pristine = new Pristine(uploadForm, {
-  classTo: '.img-upload__field-wrapper',
-  errorClassTextParent:'.img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  errorTextClass: '.img-upload__field-wrapper--error', // Класс, обозначающий невалидное поле
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent:'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
+  errorTextClass: 'img-upload__field-wrapper--error', // Класс, обозначающий невалидное поле
 });
 
 
@@ -27,9 +27,8 @@ const validateHashTagsNumber = (value) => {
 };
 const validateHashTagsText = (value) => {
   const hashTagsArr = value.split(' ');
-  hashTagsArr.forEach((element) => {
-    regex.test(element);
-  });
+  return hashTagsArr.every((element) => regex.test(element));
+
 };
 const maxCommentLength = 140;
 const commentTextAreaValue = commentTextArea.value;
@@ -43,14 +42,14 @@ const validateUniqueHashTags = (value) => {
   return true;
 };
 
-pristine.addValidator(hashTagsInput,validateUniqueHashTags,'Хэштеги не должны повторяться ');
+pristine.addValidator(hashTagsInput,validateUniqueHashTags,'Хэштеги не должны повторяться ',false);
 pristine.addValidator(commentTextArea,
   validateComments,
-  'Max length коментария 140 symbols');
+  'Max length коментария 140 symbols',false);
 pristine.addValidator(hashTagsInput,
   validateHashTagsText,
-  'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.');
-pristine.addValidator(hashTagsInput,validateHashTagsNumber,'Максимум 5 хэштегов братик');
+  'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',false);
+pristine.addValidator(hashTagsInput,validateHashTagsNumber,'Максимум 5 хэштегов братик',false);
 
 
 const imgUploadClose = (evt) => {
@@ -58,35 +57,33 @@ const imgUploadClose = (evt) => {
   imgUploadHud.classList.add('hidden');
   body.classList.remove('modal-open');
   imgUploadInput.value = '';
-  hashTagsInput.removeEventListener('focus',removeOnEsc);
-  commentTextArea.removeEventListener('focus',removeOnEsc);
   hashTagsInput.value = '';
   commentTextArea.value = '';
 };
-const onEsc = (evt) => {
-  if (evt.keyCode === 27) {
-    evt.preventDefault();
-    imgUploadClose();
-  }
-};
-document.addEventListener('click',onEsc);
+// const onEsc = (evt) => {
+//   if (evt.keyCode === 27) {
+//     evt.preventDefault();
+//     imgUploadClose();
+//   }
+// };
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
   imgUploadHud.classList.remove('hidden');
   body.classList.add('modal-open');
-  // not working imgUploadPreview.querySelector('img').src = imgUploadInput.value;
-//   uploadForm.addEventListener('submit',(e) => {
-//     e.preventDefault();
-//     pristine.validate();
-//   });
+  document.addEventListener('keydown',(e) => {
+    if (e.keyCode === 27) {
+      e.preventDefault();
+      imgUploadClose();
+    }
+  });
+  imgUploadCloseButton.addEventListener('click', imgUploadClose);
+
 };
-
-
 hashTagsInput.addEventListener('focus',removeOnEsc);
 commentTextArea.addEventListener('focus',removeOnEsc);
 imgUploadInput.addEventListener('change', openPhotoEditor);
-imgUploadCloseButton.addEventListener('click', imgUploadClose);
-document.addEventListener('click',onEsc);
+
+
 uploadForm.addEventListener('submit',(evt) => {
   evt.preventDefault();
   pristine.validate();
