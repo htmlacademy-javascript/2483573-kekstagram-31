@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import {generatePhotosArray} from './post.js';
 import './template.js';
-import './openCloseFullPhoto.js';
+import './open-close-full-photo.js';
+import './new-photos-forms-handler.js';
 const photosArray = generatePhotosArray();
 console.log(photosArray);
