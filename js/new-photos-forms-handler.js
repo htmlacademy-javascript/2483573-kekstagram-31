@@ -6,7 +6,7 @@ const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
-const hashTagsArr = hashTagsInput.value.split(',');
+// const hashTagsArr = hashTagsInput.value.split(',');
 
 
 const removeOnEsc = (event) => {
@@ -14,29 +14,34 @@ const removeOnEsc = (event) => {
 };
 
 const pristine = new Pristine(uploadForm, {
-  classTo: '.img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  errorClass: '.img-upload__field-wrapper--error', // Класс, обозначающий невалидное поле
+  classTo: '.img-upload__field-wrapper',
+  errorClassTextParent:'.img-upload__field-wrapper', // Элемент, на который будут добавляться классы
+  errorTextClass: '.img-upload__field-wrapper--error', // Класс, обозначающий невалидное поле
 });
 
 
 const hashTagsArrMaxLength = 5;
-const validateHashTagsNumber = () => hashTagsArr.length !== hashTagsArrMaxLength;
-const validateHashTagsText = () => hashTagsArr.forEach((element) => {
-  regex.test(element);
-});
+const validateHashTagsNumber = (value) => {
+  const hashTagsArr = value.split(' ');
+  return hashTagsArr.length !== hashTagsArrMaxLength;
+};
+const validateHashTagsText = (value) => {
+  const hashTagsArr = value.split(' ');
+  hashTagsArr.forEach((element) => {
+    regex.test(element);
+  });
+};
 const maxCommentLength = 140;
 const commentTextAreaValue = commentTextArea.value;
 const validateComments = () => commentTextAreaValue.length !== maxCommentLength;
-const validateUniqueHashTags = () => {
-  const uniqueHashTags = {};
-  for (let i = 0; i < hashTagsArr.length; i++) {
-    if (uniqueHashTags[hashTagsArr[i]]) {
-      return false;
-    }
-    return true;
+const validateUniqueHashTags = (value) => {
+  const hashTagsArr = value.split(' ');
+  const dublicates = new Set(hashTagsArr).size !== hashTagsArr.length;
+  if(dublicates){
+    return false;
   }
+  return true;
 };
-
 
 pristine.addValidator(hashTagsInput,validateUniqueHashTags,'Хэштеги не должны повторяться ');
 pristine.addValidator(commentTextArea,
@@ -82,3 +87,7 @@ commentTextArea.addEventListener('focus',removeOnEsc);
 imgUploadInput.addEventListener('change', openPhotoEditor);
 imgUploadCloseButton.addEventListener('click', imgUploadClose);
 document.addEventListener('click',onEsc);
+uploadForm.addEventListener('submit',(evt) => {
+  evt.preventDefault();
+  pristine.validate();
+});
