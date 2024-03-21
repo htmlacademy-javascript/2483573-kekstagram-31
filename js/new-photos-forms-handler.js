@@ -60,25 +60,21 @@ const imgUploadClose = () => {
   hashTagsInput.value = '';
   commentTextArea.value = '';
 };
+
+const checkFocusOnInputFields = () => document.activeElement === hashTagsInput || document.activeElement === commentTextArea;
 const onEsc = (evt) => {
-  if (evt.keyCode === 27) {
+  if (evt.keyCode === 27 && !checkFocusOnInputFields()) {
     evt.preventDefault();
     imgUploadClose();
   }
 };
-
-// const removeOnEsc = (event) => {
-//   event.preventDefault();
-//   ;
-// };
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
   imgUploadHud.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown',onEsc);
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
-  // hashTagsInput.addEventListener('focus',removeOnEsc);
-  // commentTextArea.addEventListener('focus',removeOnEsc);
+
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
 
