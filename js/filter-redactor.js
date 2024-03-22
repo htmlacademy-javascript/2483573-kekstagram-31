@@ -1,128 +1,140 @@
-const imgUploadHud = document.querySelector('.img-upload__overlay');
-const body = document.querySelector('body');
-imgUploadHud.classList.remove('hidden');
-body.classList.add('modal-open');
 const effectNone = document.querySelector('#effect-none');
 const effectChrome = document.querySelector('#effect-chrome');
-const effectSepia = document.querySelector('#effect-serpia');
+const effectSepia = document.querySelector('#effect-sepia');
 const effectMarvin = document.querySelector('#effect-marvin');
 const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
-const effectLevelValue = document.querySelector('.effect-level__value');
 const imgPreview = document.querySelector('.img-upload__preview');
 const imgEffectlevel = document.querySelector('.img-upload__effect-level');
-
-let settings = {
-  range:{
-    min:0,
-    max:100,
+const effectLevelValue = document.querySelector('.effect-level__value');
+imgEffectlevel.classList.add('hidden');
+const settings = {
+  range: {
+    min: 0,
+    max: 100,
   },
-  step:1,
-  start:100
+  step: 1,
+  start: 100,
 };
+
+noUiSlider.create(imgEffectlevel, settings);
 let filterValue = effectLevelValue.value;
 
-const chromeSettings = (Event) =>{
-  Event.preventDefault();
-  settings =
-      {
-        range:{
-          min:0,
-          max:1,
-        },
-        step:0.1,
-        start:1
-      };
-  imgPreview.style.filter = `grayscale${filterValue.toString()}`;
+const show = () => {
+  imgEffectlevel.removeAttribute('disabled', true);
+  imgEffectlevel.classList.remove('hidden');
 };
-const sepiaSettings = (Event) =>{
-  Event.preventDefault();
-  settings =
-      {
-        range:{
-          min:0,
-          max:1,
-        },
-        step:0.1,
-        start:1
-      };
-  imgPreview.style.filter = `sepia${filterValue.toString()}`;
-};
-const heatSettins = (Event) => {
-  Event.preventDefault();
-  settings =
-    {
-      range:{
-        min:0,
-        max:3,
-      },
-      step:0.1,
-      start:1
-    };
-  imgPreview.style.filter = `brightness${filterValue.toString()}`;
-};
-const phobosSettings = (Event) => {
-  Event.preventDefault();
-  settings =
-    {
-      range:{
-        min:`${0}px`,
-        max:`${3}px`,
-      },
-      step:`${0.1}px`,
-      start:`${3}px`
-    };
-  imgPreview.style.filter = `blur${filterValue.toString()}`;
-
-};
-const marvinSettings = (Event) => {
-  Event.preventDefault();
-  settings =
-      {
-        range:{
-          min:`${0}%`,
-          max:`${100}%`,
-        },
-        step:`${1}%`,
-        start:`${100}%`
-      };
-  imgPreview.style.filter = `invert${filterValue.toString()}`;
-};
-const noneSettings = (Event) => {
-  Event.preventDefault();
+const hide = () => {
   imgPreview.style.removeProperty('filter');
+  imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
 };
-// const filterSliderSetting = () =>{
-//   if(Event.target === effectChrome){
-//     chromeSettings();
-//   } else if(Event.target === effectSepia){
-//     sepiaSettings();
-//   } else if (Event.target === effectHeat){
-//     heatSettins();
-//   } else if (Event.target === effectPhobos){
-//     phobosSettings();
-//   } else if(Event.target === effectMarvin){
-//     marvinSettings();
-//   } else if (Event.target === effectNone){
-//     noneSettings();
-//   }
-//
-//};
-// const effectChrome = document.querySelector('#effect-chtome');
-// const effectSepia = document.querySelector('#effect-serpia');
-// const effectMarvin = document.querySelector('#effect-marvin');
-// const effectPhobos = document.querySelector('#effect-phobos');
-// const effectHeat = document.querySelector('#effect-heat');
-noUiSlider.create(imgEffectlevel,settings);
-imgEffectlevel.noUiSlider.on('update', () => {
-  filterValue = imgEffectlevel.noUiSlider.get();
-});
 
+const chromeFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 1,
+  },
+  step: 0.1,
+  start: 1,
+};
+const sepiaFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 1,
+  },
+  step: 0.1,
+  start: 1,
+};
+const heatFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 3,
+  },
+  step: 0.1,
+  start: 3,
+};
+const marvinFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 100,
+  },
+  step: 1,
+  start: 100,
+};
+const phobosFilter = {
+  connect: 'lower',
+  range: {
+    min: 0, // тут только цифры допускаются
+    max: 3,
+  },
+  step: 0.1,
+  start: 3,
+};
 
-effectChrome.addEventListener('focus',chromeSettings());
-effectSepia.addEventListener('focus',sepiaSettings());
-effectHeat.addEventListener('focus',heatSettins());
-effectPhobos.addEventListener('focus',phobosSettings());
-effectMarvin.addEventListener('focus',marvinSettings());
-effectNone.addEventListener('focus',noneSettings());
+const noneFilter = () => {
+  hide();
+};
+const createChrome = (evt) => {
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+  noUiSlider.create(imgEffectlevel, chromeFilter);
+  show();
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `grayscale(${filterValue.toString()})`;
+  });
+};
+const createSepia = (evt) => {
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+  noUiSlider.create(imgEffectlevel, sepiaFilter);
+  show();
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `sepia(${filterValue.toString()})`;
+  });
+};
+const createHeat = (evt) => {
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+  noUiSlider.create(imgEffectlevel, heatFilter);
+  show();
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = ` brightness(${filterValue.toString()})`;
+  });
+};
+const createMarvin = (evt) => {
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+  noUiSlider.create(imgEffectlevel, marvinFilter);
+  show();
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `invert(${filterValue.toString()}%)`;
+  });
+};
+const createPhobos = (evt) => {
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy(); // тут уничтожаем слайдер
+  // чтобы тут создать его снова с новыми параметрами, которые подойдут для эффекта
+  noUiSlider.create(imgEffectlevel, phobosFilter);
+  show();
+  // а тут снова слушаем событие обновления слайдера, чтобы прописать нужно значение в стили
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `blur(${filterValue.toString()}px)`;
+  });
+};
+
+effectChrome.addEventListener('change', createChrome);
+effectSepia.addEventListener('change', createSepia);
+effectHeat.addEventListener('change', createHeat);
+effectMarvin.addEventListener('change', createMarvin);
+effectNone.addEventListener('change', noneFilter);
+effectPhobos.addEventListener('change', createPhobos);
