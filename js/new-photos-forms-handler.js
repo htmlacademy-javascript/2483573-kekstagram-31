@@ -29,7 +29,7 @@ const validateHashTagsText = (value) => {
   return true;
 };
 const maxCommentLength = 140;
-const validateComments = (value) => value.length !== maxCommentLength;
+const validateComments = (value) => value.length <= maxCommentLength;
 const validateUniqueHashTags = (value) => {
   const hashTagsArr = value.split(' ');
   const lowerCaseHashTagsArr = hashTagsArr.map((tag) => tag.toLowerCase());
