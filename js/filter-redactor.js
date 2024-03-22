@@ -5,7 +5,7 @@ const effectMarvin = document.querySelector('#effect-marvin');
 const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
 const imgPreview = document.querySelector('.img-upload__preview');
-const imgEffectlevel = document.querySelector('.img-upload__effect-level');
+const imgEffectlevel = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
 imgEffectlevel.classList.add('hidden');
 const settings = {
