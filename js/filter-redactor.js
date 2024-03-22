@@ -6,7 +6,7 @@ const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
 const imgPreview = document.querySelector('.img-upload__preview');
 const imgEffectlevel = document.querySelector('.effect-level__slider');
-const imgEffectLine = document.querySelector('img-upload__effect-level');
+const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 imgEffectlevel.classList.add('hidden');
 const settings = {
@@ -24,15 +24,15 @@ let filterValue = effectLevelValue.value;
 const show = () => {
   imgEffectlevel.removeAttribute('disabled', true);
   imgEffectlevel.classList.remove('hidden');
-  imgEffectLine.classList.remove('hidden');
+  imgEffectContainer.classList.remove('hidden');
 };
 const hide = () => {
   imgPreview.style.removeProperty('filter');
   imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
-  imgEffectLine.classList.add('hidden');
+  imgEffectContainer.classList.add('hidden');
 };
-
+hide();
 const chromeFilter = {
   connect: 'lower',
   range: {
@@ -90,6 +90,7 @@ const createChrome = (evt) => {
   imgEffectlevel.noUiSlider.on('update', () => {
     filterValue = imgEffectlevel.noUiSlider.get();
     imgPreview.style.filter = `grayscale(${filterValue.toString()})`;
+    effectLevelValue.value = filterValue;
   });
 };
 const createSepia = (evt) => {
@@ -100,6 +101,7 @@ const createSepia = (evt) => {
   imgEffectlevel.noUiSlider.on('update', () => {
     filterValue = imgEffectlevel.noUiSlider.get();
     imgPreview.style.filter = `sepia(${filterValue.toString()})`;
+    effectLevelValue.value = filterValue;
   });
 };
 const createHeat = (evt) => {
@@ -110,6 +112,7 @@ const createHeat = (evt) => {
   imgEffectlevel.noUiSlider.on('update', () => {
     filterValue = imgEffectlevel.noUiSlider.get();
     imgPreview.style.filter = ` brightness(${filterValue.toString()})`;
+    effectLevelValue.value = filterValue;
   });
 };
 const createMarvin = (evt) => {
@@ -120,6 +123,7 @@ const createMarvin = (evt) => {
   imgEffectlevel.noUiSlider.on('update', () => {
     filterValue = imgEffectlevel.noUiSlider.get();
     imgPreview.style.filter = `invert(${filterValue.toString()}%)`;
+    effectLevelValue.value = filterValue;
   });
 };
 const createPhobos = (evt) => {
