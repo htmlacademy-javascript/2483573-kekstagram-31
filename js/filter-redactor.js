@@ -1,7 +1,3 @@
-const imgUploadHud = document.querySelector('.img-upload__overlay');
-const body = document.querySelector('body');
-imgUploadHud.classList.remove('hidden');
-body.classList.add('modal-open');
 
 const effectNone = document.querySelector('#effect-none');
 const effectChrome = document.querySelector('#effect-chrome');
@@ -14,7 +10,7 @@ const imgPreview = document.querySelector('.img-upload__preview');
 const imgEffectlevel = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 imgEffectlevel.classList.add('hidden');
-let settings = {
+const settings = {
   range: {
     min: 0,
     max: 100,
@@ -22,102 +18,144 @@ let settings = {
   step: 1,
   start: 100
 };
-
+noUiSlider.create(imgEffectlevel, settings);
 let filterValue = effectLevelValue.value;
 
-const noneSettings = (evt) => {
-  evt.preventDefault();
+const show = () =>{
+  imgEffectlevel.removeAttribute('disabled', true);
+  imgEffectlevel.classList.remove('hidden');
+};
+const hide = () =>{
   imgPreview.style.removeProperty('filter');
   imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
 };
-
-const chromeSettings = (evt) => {
-  evt.preventDefault();
-  settings = {
-    range: {
-      min: 0,
-      max: 1,
-    },
-    step: 0.1,
-    start: 1
-  };
-  imgPreview.style.filter = `grayscale(${filterValue.toString()})`;
-  imgEffectlevel.removeAttribute('disabled', true);
-  imgEffectlevel.classList.remove('hidden');
+const chromeFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 1,
+  },
+  step: 0.1,
+  start: 1
 };
-
-const sepiaSettings = (evt) => {
-  evt.preventDefault();
-  settings = {
-    range: {
-      min: 0,
-      max: 1,
-    },
-    step: 0.1,
-    start: 1
-  };
-  imgPreview.style.filter = `sepia(${filterValue.toString()})`;
-  imgEffectlevel.removeAttribute('disabled', true);
-  imgEffectlevel.classList.remove('hidden');
+const sepiaFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 1,
+  },
+  step: 0.1,
+  start: 1
 };
-
-const heatSettings = (evt) => {
-  evt.preventDefault();
-  settings = {
-    range: {
-      min: 0,
-      max: 3,
-    },
-    step: 0.1,
-    start: 1
-  };
-  imgPreview.style.filter = `brightness(${filterValue.toString()})`;
-  imgEffectlevel.removeAttribute('disabled', true);
-  imgEffectlevel.classList.remove('hidden');
+const heatFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 3,
+  },
+  step: 0.1,
+  start: 3
 };
-
-const phobosSettings = (evt) => {
-  evt.preventDefault();
-  settings = {
-    range: {
-      min: `${0}px`,
-      max: `${3}px`,
-    },
-    step: `${0.1}px`,
-    start: `${3}px`,
-  };
-  imgPreview.style.filter = `blur(${filterValue.toString()})`;
-  imgEffectlevel.removeAttribute('disabled', true);
-  imgEffectlevel.classList.remove('hidden');
+const marvinFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 100,
+  },
+  step: 1,
+  start: 100
 };
-
-const marvinSettings = (evt) => {
-  evt.preventDefault();
-  settings = {
-    range: {
-      min: `${0}%`,
-      max: `${100}%`,
-    },
-    step: `${1}%`,
-    start: `${100}%`
-  };
-  imgPreview.style.filter = `invert(${filterValue.toString()})`;
-  imgEffectlevel.removeAttribute('disabled', true);
-  imgEffectlevel.classList.remove('hidden');
+const phobosFilter = {
+  connect: 'lower',
+  range: {
+    min: 0, // тут только цифры допускаются
+    max: 3,
+  },
+  step: 0.1,
+  start: 3,
 };
+const noneFilter = () => {
+  hide();
+};
+const createChrome = (evt)=>{
 
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
 
-noUiSlider.create(imgEffectlevel, settings);
+  noUiSlider.create(imgEffectlevel, chromeFilter);
+  show();
 
-imgEffectlevel.noUiSlider.on('update', () => {
-  filterValue = imgEffectlevel.noUiSlider.get();
-});
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `grayscale(${filterValue.toString()})`;
+  }
 
+  );
+};
+const createSepia = (evt)=>{
 
-effectChrome.addEventListener('click', chromeSettings);
-effectSepia.addEventListener('click', sepiaSettings);
-effectHeat.addEventListener('click', heatSettings);
-effectPhobos.addEventListener('click', phobosSettings);
-effectMarvin.addEventListener('click', marvinSettings);
-effectNone.addEventListener('click', noneSettings);
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+
+  noUiSlider.create(imgEffectlevel, sepiaFilter);
+  show();
+
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `sepia(${filterValue.toString()})`;
+  }
+
+  );
+};
+const createHeat = (evt)=>{
+
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+
+  noUiSlider.create(imgEffectlevel, heatFilter);
+  show();
+
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = ` brightness(${filterValue.toString()})`;
+  }
+
+  );
+};
+const createMarvin = (evt)=>{
+
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy();
+
+  noUiSlider.create(imgEffectlevel, marvinFilter);
+  show();
+
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `invert(${filterValue.toString()}%)`;
+  }
+
+  );
+};
+const createPhobos = (evt)=>{
+
+  evt.preventDefault();
+  imgEffectlevel.noUiSlider.destroy(); // тут уничтожаем слайдер
+  // чтобы тут создать его снова с новыми параметрами, которые подойдут для эффекта
+  noUiSlider.create(imgEffectlevel, phobosFilter);
+  show();
+  // а тут снова слушаем событие обновления слайдера, чтобы прописать нужно значение в стили
+  imgEffectlevel.noUiSlider.on('update', () => {
+    filterValue = imgEffectlevel.noUiSlider.get();
+    imgPreview.style.filter = `blur(${filterValue.toString()}px)`;
+  }
+
+  );
+};
+effectChrome.addEventListener('change',createChrome);
+effectSepia.addEventListener('change',createSepia);
+effectHeat.addEventListener('change',createHeat);
+effectMarvin.addEventListener('change',createMarvin);
+effectNone.addEventListener('change',noneFilter);
+effectPhobos.addEventListener('change', createPhobos);
