@@ -6,6 +6,7 @@ const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
 const imgPreview = document.querySelector('.img-upload__preview');
 const imgEffectlevel = document.querySelector('.effect-level__slider');
+const imgEffectLine = document.querySelector('img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 imgEffectlevel.classList.add('hidden');
 const settings = {
@@ -23,11 +24,13 @@ let filterValue = effectLevelValue.value;
 const show = () => {
   imgEffectlevel.removeAttribute('disabled', true);
   imgEffectlevel.classList.remove('hidden');
+  imgEffectLine.classList.remove('hidden');
 };
 const hide = () => {
   imgPreview.style.removeProperty('filter');
   imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
+  imgEffectLine.classList.add('hidden');
 };
 
 const chromeFilter = {
