@@ -9,7 +9,7 @@
 Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
 */
 import { generatePhotosArray } from './post.js';
-import{openBigPhoto} from './openCloseFullPhoto.js';
+import{openBigPhoto} from './open-close-full-photo.js';
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const createdPhotos = generatePhotosArray();

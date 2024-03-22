@@ -11,8 +11,7 @@ const loadAllComments = () => {
 
   const socialCommentFragment = document.createDocumentFragment();
   commentsCount.classList.remove('hidden');
-  currentComments += CommentsStep;
-  const loadedComments = commentsArr.slice(currentComments, currentComments + CommentsStep);
+  const loadedComments = commentsArr.slice(currentComments, currentComments += CommentsStep);
   //const loadedCommentsLength = loadedComments.length += CommentsStep;
 
   loadedComments.forEach((comment) => {
@@ -29,7 +28,6 @@ const loadAllComments = () => {
   });
 
   commentsCount.querySelector('.social__comment-shown-count').textContent = currentComments >= commentsArr.length ? commentsArr.length : currentComments;
-  //commentsCount.querySelector('.social__comment-shown-count').textContent = loadedComments.length;
   commentsCount.querySelector('.social__comment-total-count').textContent = commentsArr.length ;
   if (currentComments >= commentsArr.length) {
     commentsLoader.classList.add('hidden');
