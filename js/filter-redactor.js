@@ -25,15 +25,15 @@ let settings = {
 
 let filterValue = effectLevelValue.value;
 
-const noneSettings = (Event) => {
-  Event.preventDefault();
+const noneSettings = (evt) => {
+  evt.preventDefault();
   imgPreview.style.removeProperty('filter');
   imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
 };
 
-const chromeSettings = (Event) => {
-  Event.preventDefault();
+const chromeSettings = (evt) => {
+  evt.preventDefault();
   settings = {
     range: {
       min: 0,
@@ -47,8 +47,8 @@ const chromeSettings = (Event) => {
   imgEffectlevel.classList.remove('hidden');
 };
 
-const sepiaSettings = (Event) => {
-  Event.preventDefault();
+const sepiaSettings = (evt) => {
+  evt.preventDefault();
   settings = {
     range: {
       min: 0,
@@ -62,8 +62,8 @@ const sepiaSettings = (Event) => {
   imgEffectlevel.classList.remove('hidden');
 };
 
-const heatSettings = (Event) => {
-  Event.preventDefault();
+const heatSettings = (evt) => {
+  evt.preventDefault();
   settings = {
     range: {
       min: 0,
@@ -77,8 +77,8 @@ const heatSettings = (Event) => {
   imgEffectlevel.classList.remove('hidden');
 };
 
-const phobosSettings = (Event) => {
-  Event.preventDefault();
+const phobosSettings = (evt) => {
+  evt.preventDefault();
   settings = {
     range: {
       min: `${0}px`,
@@ -92,8 +92,8 @@ const phobosSettings = (Event) => {
   imgEffectlevel.classList.remove('hidden');
 };
 
-const marvinSettings = (Event) => {
-  Event.preventDefault();
+const marvinSettings = (evt) => {
+  evt.preventDefault();
   settings = {
     range: {
       min: `${0}%`,
