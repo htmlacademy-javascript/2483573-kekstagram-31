@@ -1,3 +1,4 @@
+import { sendData } from './api';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
@@ -6,13 +7,22 @@ const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
-// const hashTagsArr = hashTagsInput.value.split(',');
-
+const imgPreview = document.querySelector('.img-upload__preview');
+const effectPreview = document.querySelectorAll('.effects__preview');
+const successWindowTemplate = document.querySelector('#success').content;
+const successButton = document.querySelector('.success__button');
+const effectLevelValue = document.querySelector('.effect-level__value').value;
+const submitButton = document.querySelector('.img-upload__submit');
+const checkEsc = (evt) => {
+  if (evt.keyCode === 27){
+    return true;
+  }
+};
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
-  errorTextParent:'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  errorTextClass: 'img-upload__field-wrapper--error', // Класс, обозначающий невалидное поле
+  errorTextParent:'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__field-wrapper--error',
 });
 
 
@@ -62,26 +72,83 @@ const imgUploadClose = () => {
 
 const checkFocusOnInputFields = () => document.activeElement === hashTagsInput || document.activeElement === commentTextArea;
 const onEsc = (evt) => {
-  if (evt.keyCode === 27 && !checkFocusOnInputFields()) {
+  if (checkEsc && !checkFocusOnInputFields()) {
     evt.preventDefault();
     imgUploadClose();
   }
+};
+const loadPreviews = () => {
+  const file = imgUploadInput.files[0];
+  const imgUrl = URL.createObjectURL(file);
+  imgPreview.querySelector('img').src = imgUrl;
+  effectPreview.forEach((element) => {
+    element.style.backgroundImage = `url(${imgUrl})`;
+  });
 };
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
   imgUploadHud.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown',onEsc);
-  imgUploadCloseButton.addEventListener('click', imgUploadClose);
+  document.addEventListener('keydown', onEsc);
+  loadPreviews();
 
+  imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
+
 imgUploadInput.addEventListener('change', openPhotoEditor);
 
+const showSuccessWindow = () => {
+  const successArea = successWindowTemplate.cloneNode(true);
+  document.body.appendChild(successArea);
+  const successAreaRemove = (evt) => {
+    evt.preventDefault();
+    document.body.removeChild(successArea);
+  };
+  const closeSuccessWindow = (evt) => {
+    evt.preventDefault();
+    if(checkEsc){
+      successAreaRemove();
+    }
+  };
 
-uploadForm.addEventListener('submit',(event) => {
-  event.preventDefault();
+  successButton.addEventListener('click',closeSuccessWindow());
+  document.body.addEventListener('click',(evt) => {
+
+    if(evt.target === successArea){
+      successAreaRemove();
+    }
+  }
+  );
+};
+const blockButton = (evt) => {
+  evt.preventDefault();
+  submitButton.setAttribute('disabled',true);
+};
+const unblockButton = (evt) => {
+  evt.preventDefault();
+  submitButton.removeAttribute('disabled',true);
+};
+const sendFormData = (formElement,evt) => {
   const isValid = pristine.validate();
   if(isValid){
-    uploadForm.submit();
+    blockButton();
+    const formData = new FormData(formElement);
+    formData.append('effectLevel',effectLevelValue);
+    formData.append('comments',commentTextArea.value);
+    formData.append('hashtags',hashTagsInput.value);
+    evt.preventDefault();
+    sendData(formData)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+      })
+      .catch(() => {
+        throw new Error('Не удалось отправить форму. Попробуйте ещё раз');
+      })
+      .finally(unblockButton());
+    showSuccessWindow();
   }
-});
+};
+
+uploadForm.addEventListener('submit',sendFormData());
