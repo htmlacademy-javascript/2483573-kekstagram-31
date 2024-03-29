@@ -13,6 +13,7 @@ const successWindowTemplate = document.querySelector('#success').content;
 const successButton = document.querySelector('.success__button');
 const effectLevelValue = document.querySelector('.effect-level__value').value;
 const submitButton = document.querySelector('.img-upload__submit');
+const successArea = successWindowTemplate.cloneNode(true);
 const checkEsc = (evt) => {
   if (evt.keyCode === 27){
     return true;
@@ -60,7 +61,12 @@ pristine.addValidator(hashTagsInput,
   'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',false);
 pristine.addValidator(hashTagsInput,validateHashTagsNumber,'Максимум 5 хэштегов братик');
 
+const closeSuccessWindow = (evt) => {
 
+  evt.preventDefault();
+  document.remove(successArea);
+
+};
 const imgUploadClose = () => {
 
   imgUploadHud.classList.add('hidden');
@@ -75,6 +81,8 @@ const onEsc = (evt) => {
   if (checkEsc && !checkFocusOnInputFields()) {
     evt.preventDefault();
     imgUploadClose();
+    closeSuccessWindow();
+
   }
 };
 const loadPreviews = () => {
@@ -98,57 +106,54 @@ const openPhotoEditor = (evt) => {
 imgUploadInput.addEventListener('change', openPhotoEditor);
 
 const showSuccessWindow = () => {
-  const successArea = successWindowTemplate.cloneNode(true);
-  document.body.appendChild(successArea);
-  const successAreaRemove = (evt) => {
-    evt.preventDefault();
-    document.body.removeChild(successArea);
-  };
-  const closeSuccessWindow = (evt) => {
-    evt.preventDefault();
-    if(checkEsc){
-      successAreaRemove();
-    }
-  };
 
-  successButton.addEventListener('click',closeSuccessWindow());
+
+  document.body.append(successArea);
+
+
+  successButton.addEventListener('click', closeSuccessWindow);
+  successArea.addEventListener('keydown', onEsc);
   document.body.addEventListener('click',(evt) => {
 
     if(evt.target === successArea){
-      successAreaRemove();
+      closeSuccessWindow();
     }
   }
   );
 };
-const blockButton = (evt) => {
-  evt.preventDefault();
-  submitButton.setAttribute('disabled',true);
-};
-const unblockButton = (evt) => {
-  evt.preventDefault();
-  submitButton.removeAttribute('disabled',true);
-};
-const sendFormData = (formElement,evt) => {
-  const isValid = pristine.validate();
-  if(isValid){
-    blockButton();
-    const formData = new FormData(formElement);
-    formData.append('effectLevel',effectLevelValue);
-    formData.append('comments',commentTextArea.value);
-    formData.append('hashtags',hashTagsInput.value);
-    evt.preventDefault();
-    sendData(formData)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error();
-        }
-      })
-      .catch(() => {
-        throw new Error('Не удалось отправить форму. Попробуйте ещё раз');
-      })
-      .finally(unblockButton());
-    showSuccessWindow();
-  }
+
+const blockButton = () => {
+  submitButton.setAttribute('disabled', true);
 };
 
-uploadForm.addEventListener('submit',sendFormData());
+const unblockButton = () => {
+
+  submitButton.removeAttribute('disabled');
+};
+
+const sendFormData = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      imgUploadClose();
+      blockButton();
+      const formData = new FormData(evt.target);
+
+
+      formData.append('effectLevel', effectLevelValue);
+      formData.append('comments', commentTextArea.value);
+      formData.append('hashtags', hashTagsInput.value);
+
+
+      sendData(formData)
+        .then(onSuccess);
+      unblockButton();
+    }
+  }
+
+  );
+};
+sendFormData(showSuccessWindow);
+//
