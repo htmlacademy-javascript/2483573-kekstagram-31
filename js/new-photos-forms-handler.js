@@ -12,8 +12,7 @@ const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
 const successButton = document.body.querySelector('.success__button');
 const effectLevelValue = document.querySelector('.effect-level__value').value;
-const submitButton = document.querySelector('.img-upload__submit');
-const successArea = successWindowTemplate.cloneNode(true);
+
 const checkEsc = (evt) => {
   if (evt.keyCode === 27){
     return true;
@@ -95,7 +94,7 @@ const openPhotoEditor = (evt) => {
 
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
-
+const successArea = successWindowTemplate.cloneNode(true);
 imgUploadInput.addEventListener('change', openPhotoEditor);
 
 const closeSuccessWindow = (evt) => {
@@ -103,6 +102,7 @@ const closeSuccessWindow = (evt) => {
   evt.preventDefault();
   document.body.remove(successArea);
 };
+const submitButton = document.querySelector('.img-upload__submit');
 const showSuccessWindow = () => {
 
 
