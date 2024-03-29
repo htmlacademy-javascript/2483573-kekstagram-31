@@ -10,7 +10,7 @@ const commentTextArea = document.querySelector('.text__description');
 const imgPreview = document.querySelector('.img-upload__preview');
 const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
-const successButton = document.querySelector('.success__button');
+const successButton = document.body.querySelector('.success__button');
 const effectLevelValue = document.querySelector('.effect-level__value').value;
 const submitButton = document.querySelector('.img-upload__submit');
 const successArea = successWindowTemplate.cloneNode(true);
@@ -61,12 +61,7 @@ pristine.addValidator(hashTagsInput,
   'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',false);
 pristine.addValidator(hashTagsInput,validateHashTagsNumber,'Максимум 5 хэштегов братик');
 
-const closeSuccessWindow = (evt) => {
 
-  evt.preventDefault();
-  document.remove(successArea);
-
-};
 const imgUploadClose = () => {
 
   imgUploadHud.classList.add('hidden');
@@ -81,8 +76,6 @@ const onEsc = (evt) => {
   if (checkEsc && !checkFocusOnInputFields()) {
     evt.preventDefault();
     imgUploadClose();
-    closeSuccessWindow();
-
   }
 };
 const loadPreviews = () => {
@@ -105,6 +98,11 @@ const openPhotoEditor = (evt) => {
 
 imgUploadInput.addEventListener('change', openPhotoEditor);
 
+const closeSuccessWindow = (evt) => {
+
+  evt.preventDefault();
+  document.body.remove(successArea);
+};
 const showSuccessWindow = () => {
 
 
@@ -112,7 +110,12 @@ const showSuccessWindow = () => {
 
 
   successButton.addEventListener('click', closeSuccessWindow);
-  successArea.addEventListener('keydown', onEsc);
+  successArea.addEventListener('keydown', (evt) => {
+    evt.preventDefault();
+    if(checkEsc){
+      closeSuccessWindow();
+    }
+  });
   document.body.addEventListener('click',(evt) => {
 
     if(evt.target === successArea){
@@ -121,7 +124,6 @@ const showSuccessWindow = () => {
   }
   );
 };
-
 const blockButton = () => {
   submitButton.setAttribute('disabled', true);
 };
@@ -137,7 +139,7 @@ const sendFormData = (onSuccess) => {
     const isValid = pristine.validate();
 
     if (isValid) {
-      imgUploadClose();
+      // imgUploadClose();
       blockButton();
       const formData = new FormData(evt.target);
 
