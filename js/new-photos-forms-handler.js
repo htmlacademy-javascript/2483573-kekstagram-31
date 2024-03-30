@@ -17,6 +17,7 @@ const checkEsc = (evt) => {
   if (evt.keyCode === 27) {
     return true;
   }
+  return false;
 };
 
 const pristine = new Pristine(uploadForm, {
@@ -106,30 +107,39 @@ const openPhotoEditor = (evt) => {
 
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
-const successArea = successWindowTemplate.cloneNode(true);
 imgUploadInput.addEventListener('change', openPhotoEditor);
-
-const closeSuccessWindow = (evt) => {
-  evt.preventDefault();
-  body.remove(successArea);
+const successArea = successWindowTemplate.cloneNode(true);
+const closeSuccessWindow = () => {
+  // evt.preventDefault();
+  body.removeChild(successArea);
 };
 
-const showSuccessWindow = () => {
-  body.append(successArea);
-  const successButton = document.body.querySelector('.success__button');
-  successButton.addEventListener('click', closeSuccessWindow);
-  // document.addEventListener('keydown', (evt) => {
-  //   evt.preventDefault();
-  //   if (checkEsc) {
-  //     closeSuccessWindow();
-  //   }
-  // });
-  // document.body.addEventListener('click', (evt) => {
-  //   if (evt.target === successArea) {
-  //     closeSuccessWindow();
-  //   }
-  // });
+const showSuccessWindow = (evt) => {
+  body.appendChild(successArea);
+  const successButton = document.querySelector('.success__button');
+  successButton.addEventListener('click', () => {
+    closeSuccessWindow(evt); //
+  });
+
+
+  document.addEventListener('keydown', (e) => {
+    if (e.keyCode === 27) {
+      closeSuccessWindow(evt);
+    }
+  });
+
+
+  const closeOnOutsideClick = (event) => {
+    if (event.target === successArea) {
+      closeSuccessWindow(evt);
+      document.body.removeEventListener('click', closeOnOutsideClick);
+    }
+  };
+
+  document.body.addEventListener('click', closeOnOutsideClick);
 };
+
+
 const blockButton = () => {
   submitButton.setAttribute('disabled', true);
 };
@@ -153,8 +163,7 @@ const sendFormData = (onSuccess) => {
 
       sendData(formData)
         .then(onSuccess)
-        .then(unblockButton())
-        .then(imgUploadClose());
+        .then(unblockButton());
 
 
     }
