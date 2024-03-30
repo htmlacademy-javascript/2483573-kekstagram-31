@@ -109,8 +109,7 @@ const openPhotoEditor = (evt) => {
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
 let successArea = successWindowTemplate.cloneNode(true);
-const closeSuccessWindow = (evt) => {
-  evt.preventDefault();
+const closeSuccessWindow = () => {
   successArea = document.querySelector('.success');
   body.removeChild(successArea);
   imgUploadClose();
@@ -121,15 +120,13 @@ const showSuccessWindow = () => {
   const successButton = document.querySelector('.success__button');
   const checkNClose = (e) => {
     e.preventDefault();
-    if (checkEsc || e.target !== successArea || e.target === successButton) {
+    if (checkEsc || e.target !== successArea || e.target.closest(successButton)) {
       closeSuccessWindow();
-      successButton.removeEventListener('click', closeSuccessWindow);
       document.removeEventListener('keydown', checkNClose);
       document.body.removeEventListener('click', checkNClose);
     }
   };
 
-  successButton.addEventListener('click', closeSuccessWindow);
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
 };
