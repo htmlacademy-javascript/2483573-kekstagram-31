@@ -10,21 +10,20 @@ const commentTextArea = document.querySelector('.text__description');
 const imgPreview = document.querySelector('.img-upload__preview');
 const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
-const successButton = document.body.querySelector('.success__button');
 const effectLevelValue = document.querySelector('.effect-level__value').value;
+const submitButton = document.querySelector('.img-upload__submit');
 
 const checkEsc = (evt) => {
-  if (evt.keyCode === 27){
+  if (evt.keyCode === 27) {
     return true;
   }
 };
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
-  errorTextParent:'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error',
 });
-
 
 const hashTagsArrMaxLength = 5;
 const validateHashTagsNumber = (value) => {
@@ -33,7 +32,7 @@ const validateHashTagsNumber = (value) => {
 };
 const validateHashTagsText = (value) => {
   const hashTagsArr = value.split(' ');
-  if(hashTagsInput.value !== '') {
+  if (hashTagsInput.value !== '') {
     return hashTagsArr.every((element) => regex.test(element));
   }
   return true;
@@ -43,26 +42,37 @@ const validateComments = (value) => value.length <= maxCommentLength;
 const validateUniqueHashTags = (value) => {
   const hashTagsArr = value.split(' ');
   const lowerCaseHashTagsArr = hashTagsArr.map((tag) => tag.toLowerCase());
-  const duplicates = new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
+  const duplicates =
+    new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
   if (duplicates) {
     return false;
   }
   return true; // Add this line to return true if no duplicates are found
-
 };
 
-pristine.addValidator(hashTagsInput,validateUniqueHashTags,'Хэштеги не должны повторяться ');
-pristine.addValidator(commentTextArea,
+pristine.addValidator(
+  hashTagsInput,
+  validateUniqueHashTags,
+  'Хэштеги не должны повторяться '
+);
+pristine.addValidator(
+  commentTextArea,
   validateComments,
-  'Max length коментария 140 symbols');
-pristine.addValidator(hashTagsInput,
+  'Max length коментария 140 symbols'
+);
+pristine.addValidator(
+  hashTagsInput,
   validateHashTagsText,
-  'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',false);
-pristine.addValidator(hashTagsInput,validateHashTagsNumber,'Максимум 5 хэштегов братик');
-
+  'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',
+  false
+);
+pristine.addValidator(
+  hashTagsInput,
+  validateHashTagsNumber,
+  'Максимум 5 хэштегов братик'
+);
 
 const imgUploadClose = () => {
-
   imgUploadHud.classList.add('hidden');
   body.classList.remove('modal-open');
   imgUploadInput.value = '';
@@ -70,7 +80,9 @@ const imgUploadClose = () => {
   commentTextArea.value = '';
 };
 
-const checkFocusOnInputFields = () => document.activeElement === hashTagsInput || document.activeElement === commentTextArea;
+const checkFocusOnInputFields = () =>
+  document.activeElement === hashTagsInput ||
+  document.activeElement === commentTextArea;
 const onEsc = (evt) => {
   if (checkEsc && !checkFocusOnInputFields()) {
     evt.preventDefault();
@@ -98,38 +110,31 @@ const successArea = successWindowTemplate.cloneNode(true);
 imgUploadInput.addEventListener('change', openPhotoEditor);
 
 const closeSuccessWindow = (evt) => {
-
   evt.preventDefault();
-  document.body.remove(successArea);
+  body.remove(successArea);
 };
-const submitButton = document.querySelector('.img-upload__submit');
+
 const showSuccessWindow = () => {
-
-
-  document.body.append(successArea);
-
-
+  body.append(successArea);
+  const successButton = document.body.querySelector('.success__button');
   successButton.addEventListener('click', closeSuccessWindow);
-  successArea.addEventListener('keydown', (evt) => {
-    evt.preventDefault();
-    if(checkEsc){
-      closeSuccessWindow();
-    }
-  });
-  document.body.addEventListener('click',(evt) => {
-
-    if(evt.target === successArea){
-      closeSuccessWindow();
-    }
-  }
-  );
+  // document.addEventListener('keydown', (evt) => {
+  //   evt.preventDefault();
+  //   if (checkEsc) {
+  //     closeSuccessWindow();
+  //   }
+  // });
+  // document.body.addEventListener('click', (evt) => {
+  //   if (evt.target === successArea) {
+  //     closeSuccessWindow();
+  //   }
+  // });
 };
 const blockButton = () => {
   submitButton.setAttribute('disabled', true);
 };
 
 const unblockButton = () => {
-
   submitButton.removeAttribute('disabled');
 };
 
@@ -139,23 +144,21 @@ const sendFormData = (onSuccess) => {
     const isValid = pristine.validate();
 
     if (isValid) {
-      // imgUploadClose();
       blockButton();
       const formData = new FormData(evt.target);
-
 
       formData.append('effectLevel', effectLevelValue);
       formData.append('comments', commentTextArea.value);
       formData.append('hashtags', hashTagsInput.value);
 
-
       sendData(formData)
-        .then(onSuccess);
-      unblockButton();
-    }
-  }
+        .then(onSuccess)
+        .then(unblockButton())
+        .then(imgUploadClose());
 
-  );
+
+    }
+  });
 };
 sendFormData(showSuccessWindow);
 //

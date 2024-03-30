@@ -7,7 +7,7 @@ const sendData = (body) => fetch(
   })
   .then((response) => {
     if (!response.ok) {
-      throw new Error('Response not OK');
+      throw new Error('Не удалось отправить форму. Попробуйте ещё раз');
     }
   })
   .catch(() => {
