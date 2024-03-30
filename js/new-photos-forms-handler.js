@@ -108,37 +108,31 @@ const openPhotoEditor = (evt) => {
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
-const successArea = successWindowTemplate.cloneNode(true);
-const closeSuccessWindow = () => {
-  // evt.preventDefault();
+let successArea = successWindowTemplate.cloneNode(true);
+const closeSuccessWindow = (evt) => {
+  evt.preventDefault();
+  successArea = document.querySelector('.success');
   body.removeChild(successArea);
+  imgUploadClose();
 };
 
-const showSuccessWindow = (evt) => {
+const showSuccessWindow = () => {
   body.appendChild(successArea);
   const successButton = document.querySelector('.success__button');
-  successButton.addEventListener('click', () => {
-    closeSuccessWindow(evt); //
-  });
-
-
-  document.addEventListener('keydown', (e) => {
-    if (e.keyCode === 27) {
-      closeSuccessWindow(evt);
-    }
-  });
-
-
-  const closeOnOutsideClick = (event) => {
-    if (event.target === successArea) {
-      closeSuccessWindow(evt);
-      document.body.removeEventListener('click', closeOnOutsideClick);
+  const checkNClose = (e) => {
+    e.preventDefault();
+    if (checkEsc || e.target !== successArea || e.target === successButton) {
+      closeSuccessWindow();
+      successButton.removeEventListener('click', closeSuccessWindow);
+      document.removeEventListener('keydown', checkNClose);
+      document.body.removeEventListener('click', checkNClose);
     }
   };
 
-  document.body.addEventListener('click', closeOnOutsideClick);
+  successButton.addEventListener('click', closeSuccessWindow);
+  document.addEventListener('keydown', checkNClose);
+  document.body.addEventListener('click', checkNClose);
 };
-
 
 const blockButton = () => {
   submitButton.setAttribute('disabled', true);
@@ -161,11 +155,7 @@ const sendFormData = (onSuccess) => {
       formData.append('comments', commentTextArea.value);
       formData.append('hashtags', hashTagsInput.value);
 
-      sendData(formData)
-        .then(onSuccess)
-        .then(unblockButton());
-
-
+      sendData(formData).then(onSuccess).then(unblockButton());
     }
   });
 };
