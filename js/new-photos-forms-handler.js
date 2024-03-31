@@ -14,6 +14,12 @@ const errorWindowTemplate = document.querySelector('#error').content;
 const effectLevelValue = document.querySelector('.effect-level__value').value;
 const submitButton = document.querySelector('.img-upload__submit');
 
+const checkEsc = (evt) => {
+  if (evt.keyCode === 27) {
+    return true;
+  }
+  return false;
+};
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -80,7 +86,7 @@ const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
 const onEsc = (evt) => {
-  if (evt.keyCode === 27 && !checkFocusOnInputFields()) {
+  if (checkEsc && !checkFocusOnInputFields()) {
     evt.preventDefault();
     imgUploadClose();
   }
@@ -112,14 +118,33 @@ const closeErrorWindow = () => {
   body.removeChild(errorArea);
   imgUploadClose();
 };
+const closeSuccessWindow = () => {
+  successArea = document.querySelector('.success');
+  body.removeChild(successArea);
+  imgUploadClose();
+};
 
-
+// const checkNClose = (evt) => {
+//   const errorButton = document.querySelector('.error__button');
+//   const successButton = document.querySelector('.success__button');
+//   if (checkEsc || evt.target !== successArea || evt.target.closest(successButton)) {
+//     closeSuccessWindow();
+//     document.removeEventListener('keydown', checkNClose);
+//     document.body.removeEventListener('click', checkNClose);
+//   } else if (checkEsc || evt.target !== errorArea || evt.target.closest(errorButton)) {
+//     closeErrorWindow();
+//     document.removeEventListener('keydown', checkNClose);
+//     document.body.removeEventListener('click', checkNClose);
+//   }
+// };
 const showErrorWindow = () => {
   body.appendChild(errorArea);
+  // checkNClose(evt)
+  errorArea = document.querySelector('.error');
   const errorButton = document.querySelector('.error__button');
   const checkNClose = (e) => {
     e.preventDefault();
-    if (e.keyCode === 27 || !e.target.closest(errorArea) || e.target.closest(errorButton)) {
+    if (checkEsc || !e.target.closest(errorArea) || e.target.closest(errorButton)) {
       closeErrorWindow();
       document.removeEventListener('keydown', checkNClose);
       document.body.removeEventListener('click', checkNClose);
@@ -131,19 +156,14 @@ const showErrorWindow = () => {
 };
 
 
-const closeSuccessWindow = () => {
-  successArea = document.querySelector('.success');
-  body.removeChild(successArea);
-  imgUploadClose();
-};
-
-
 const showSuccessWindow = () => {
   body.appendChild(successArea);
+  // checkNClose(evt);
+  successArea = document.querySelector('.success');
   const successButton = document.querySelector('.success__button');
   const checkNClose = (e) => {
     e.preventDefault();
-    if (e.keyCode === 27 || e.target !== successArea || e.target.closest(successButton)) {
+    if (checkEsc || !e.target.closest(successArea) || e.target.closest(successButton)) {
       closeSuccessWindow();
       document.removeEventListener('keydown', checkNClose);
       document.body.removeEventListener('click', checkNClose);
@@ -183,4 +203,3 @@ const sendFormData = (onSuccess) => {
   });
 };
 sendFormData(showSuccessWindow);
-//
