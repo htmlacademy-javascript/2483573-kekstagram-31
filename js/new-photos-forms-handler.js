@@ -124,51 +124,51 @@ const closeSuccessWindow = () => {
   imgUploadClose();
 };
 
-// const checkNClose = (evt) => {
-//   const errorButton = document.querySelector('.error__button');
-//   const successButton = document.querySelector('.success__button');
-//   if (checkEsc || evt.target !== successArea || evt.target.closest(successButton)) {
-//     closeSuccessWindow();
-//     document.removeEventListener('keydown', checkNClose);
-//     document.body.removeEventListener('click', checkNClose);
-//   } else if (checkEsc || evt.target !== errorArea || evt.target.closest(errorButton)) {
-//     closeErrorWindow();
-//     document.removeEventListener('keydown', checkNClose);
-//     document.body.removeEventListener('click', checkNClose);
-//   }
-// };
-const showErrorWindow = () => {
-  body.appendChild(errorArea);
-  // checkNClose(evt)
+const checkNClose = (evt) => {
+  successArea = document.querySelector('.success');
   errorArea = document.querySelector('.error');
   const errorButton = document.querySelector('.error__button');
-  const checkNClose = (e) => {
-    e.preventDefault();
-    if (checkEsc || !e.target.closest(errorArea) || e.target.closest(errorButton)) {
-      closeErrorWindow();
-      document.removeEventListener('keydown', checkNClose);
-      document.body.removeEventListener('click', checkNClose);
-    }
-  };
+  const successButton = document.querySelector('.success__button');
+  if (checkEsc || !evt.target.closest(successArea) || evt.target.closest(successButton)) {
+    closeSuccessWindow();
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
+  } else if (checkEsc || !evt.target.closest(errorArea) || evt.target.closest(errorButton)) {
+    closeErrorWindow();
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
+  }
+};
+const showErrorWindow = (evt) => {
+  body.appendChild(errorArea);
+  checkNClose(evt);
+  // const errorButton = document.querySelector('.error__button');
+  // const checkNClose = (e) => {
+  //   e.preventDefault();
+  //   if (checkEsc || e.target !== errorArea || e.target.closest(errorButton)) {
+  //     closeErrorWindow();
+  //     document.removeEventListener('keydown', checkNClose);
+  //     document.body.removeEventListener('click', checkNClose);
+  //   }
+  // };
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
 };
 
 
-const showSuccessWindow = () => {
+const showSuccessWindow = (evt) => {
   body.appendChild(successArea);
-  // checkNClose(evt);
-  successArea = document.querySelector('.success');
-  const successButton = document.querySelector('.success__button');
-  const checkNClose = (e) => {
-    e.preventDefault();
-    if (checkEsc || !e.target.closest(successArea) || e.target.closest(successButton)) {
-      closeSuccessWindow();
-      document.removeEventListener('keydown', checkNClose);
-      document.body.removeEventListener('click', checkNClose);
-    }
-  };
+  checkNClose(evt);
+  // const successButton = document.querySelector('.success__button');
+  // const checkNClose = (e) => {
+  //   e.preventDefault();
+  //   if (checkEsc || e.target !== successArea || e.target.closest(successButton)) {
+  //     closeSuccessWindow();
+  //     document.removeEventListener('keydown', checkNClose);
+  //     document.body.removeEventListener('click', checkNClose);
+  //   }
+  // };
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
