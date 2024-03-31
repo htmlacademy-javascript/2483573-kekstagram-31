@@ -119,7 +119,7 @@ const showErrorWindow = () => {
   const errorButton = document.querySelector('.error__button');
   const checkNClose = (e) => {
     e.preventDefault();
-    if (e.keyCode === 27 || e.target !== errorArea || e.target.closest(errorButton)) {
+    if (e.keyCode === 27 || !e.target.closest(errorArea) || e.target.closest(errorButton)) {
       closeErrorWindow();
       document.removeEventListener('keydown', checkNClose);
       document.body.removeEventListener('click', checkNClose);
