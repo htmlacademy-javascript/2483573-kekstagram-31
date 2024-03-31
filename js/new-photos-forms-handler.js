@@ -14,12 +14,6 @@ const errorWindowTemplate = document.querySelector('#error').content;
 const effectLevelValue = document.querySelector('.effect-level__value').value;
 const submitButton = document.querySelector('.img-upload__submit');
 
-const checkEsc = (evt) => {
-  if (evt.keyCode === 27) {
-    return true;
-  }
-  return false;
-};
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -86,7 +80,7 @@ const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
 const onEsc = (evt) => {
-  if (checkEsc && !checkFocusOnInputFields()) {
+  if (evt.keyCode === 27 && !checkFocusOnInputFields()) {
     evt.preventDefault();
     imgUploadClose();
   }
@@ -125,23 +119,20 @@ const closeSuccessWindow = () => {
 };
 
 const checkNClose = (evt) => {
-  successArea = document.querySelector('.success');
-  errorArea = document.querySelector('.error');
-  const errorButton = document.querySelector('.error__button');
-  const successButton = document.querySelector('.success__button');
-  if (checkEsc || !evt.target.closest(successArea) || evt.target.closest(successButton)) {
+  if (evt.keyCode === 27 || !evt.target.closest(document.querySelector('.success')) || evt.target.closest(document.querySelector('.success__button'))) {
     closeSuccessWindow();
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
-  } else if (checkEsc || !evt.target.closest(errorArea) || evt.target.closest(errorButton)) {
+  } else if (evt.keyCode === 27 || !evt.target.closest(document.querySelector('.error')) || evt.target.closest(document.querySelector('.error__button'))) {
     closeErrorWindow();
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
   }
 };
-const showErrorWindow = (evt) => {
+const showErrorWindow = () => {
+
   body.appendChild(errorArea);
-  checkNClose(evt);
+  // checkNClose(evt);
   // const errorButton = document.querySelector('.error__button');
   // const checkNClose = (e) => {
   //   e.preventDefault();
@@ -157,9 +148,10 @@ const showErrorWindow = (evt) => {
 };
 
 
-const showSuccessWindow = (evt) => {
+const showSuccessWindow = () => {
+
   body.appendChild(successArea);
-  checkNClose(evt);
+  // checkNClose(evt);
   // const successButton = document.querySelector('.success__button');
   // const checkNClose = (e) => {
   //   e.preventDefault();
