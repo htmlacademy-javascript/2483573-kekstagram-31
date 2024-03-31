@@ -119,11 +119,11 @@ const closeSuccessWindow = () => {
 };
 
 const checkNClose = (evt) => {
-  if (evt.keyCode === 27 || !evt.target.closest(document.querySelector('.success')) || evt.target.closest(document.querySelector('.success__button'))) {
+  if (evt.keyCode === 27 || !evt.target.closest('.success') || evt.target.closest('.success__button')) {
     closeSuccessWindow();
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
-  } else if (evt.keyCode === 27 || !evt.target.closest(document.querySelector('.error')) || evt.target.closest(document.querySelector('.error__button'))) {
+  } else if (evt.keyCode === 27 || !evt.target.closest('.error') || evt.target.closest(document.querySelector('.error__button'))) {
     closeErrorWindow();
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
@@ -132,16 +132,6 @@ const checkNClose = (evt) => {
 const showErrorWindow = () => {
 
   body.appendChild(errorArea);
-  // checkNClose(evt);
-  // const errorButton = document.querySelector('.error__button');
-  // const checkNClose = (e) => {
-  //   e.preventDefault();
-  //   if (checkEsc || e.target !== errorArea || e.target.closest(errorButton)) {
-  //     closeErrorWindow();
-  //     document.removeEventListener('keydown', checkNClose);
-  //     document.body.removeEventListener('click', checkNClose);
-  //   }
-  // };
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
@@ -149,18 +139,8 @@ const showErrorWindow = () => {
 
 
 const showSuccessWindow = () => {
-
   body.appendChild(successArea);
-  // checkNClose(evt);
-  // const successButton = document.querySelector('.success__button');
-  // const checkNClose = (e) => {
-  //   e.preventDefault();
-  //   if (checkEsc || e.target !== successArea || e.target.closest(successButton)) {
-  //     closeSuccessWindow();
-  //     document.removeEventListener('keydown', checkNClose);
-  //     document.body.removeEventListener('click', checkNClose);
-  //   }
-  // };
+
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
