@@ -10,6 +10,7 @@ const commentTextArea = document.querySelector('.text__description');
 const imgPreview = document.querySelector('.img-upload__preview');
 const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
+const errorWindowTemplate = document.querySelector('#error').content;
 const effectLevelValue = document.querySelector('.effect-level__value').value;
 const submitButton = document.querySelector('.img-upload__submit');
 
@@ -109,23 +110,63 @@ const openPhotoEditor = (evt) => {
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
 let successArea = successWindowTemplate.cloneNode(true);
+let errorArea = errorWindowTemplate.cloneNode(true);
+
+
+const closeErrorWindow = () => {
+  errorArea = document.querySelector('.error');
+  body.removeChild(errorArea);
+  imgUploadClose();
+};
 const closeSuccessWindow = () => {
   successArea = document.querySelector('.success');
   body.removeChild(successArea);
   imgUploadClose();
 };
 
-const showSuccessWindow = () => {
-  body.appendChild(successArea);
+const checkNClose = (evt) => {
+  const errorButton = document.querySelector('.error__button');
   const successButton = document.querySelector('.success__button');
-  const checkNClose = (e) => {
-    e.preventDefault();
-    if (checkEsc || e.target !== successArea || e.target.closest(successButton)) {
-      closeSuccessWindow();
-      document.removeEventListener('keydown', checkNClose);
-      document.body.removeEventListener('click', checkNClose);
-    }
-  };
+  if (checkEsc || evt.target !== successArea || evt.target.closest(successButton)) {
+    closeSuccessWindow();
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
+  } else if (checkEsc || evt.target !== errorArea || evt.target.closest(errorButton)) {
+    closeErrorWindow();
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
+  }
+};
+const showErrorWindow = (evt) => {
+  body.appendChild(errorArea);
+  checkNClose(evt);
+  // const errorButton = document.querySelector('.error__button');
+  // const checkNClose = (e) => {
+  //   e.preventDefault();
+  //   if (checkEsc || e.target !== errorArea || e.target.closest(errorButton)) {
+  //     closeErrorWindow();
+  //     document.removeEventListener('keydown', checkNClose);
+  //     document.body.removeEventListener('click', checkNClose);
+  //   }
+  // };
+
+  document.addEventListener('keydown', checkNClose);
+  document.body.addEventListener('click', checkNClose);
+};
+
+
+const showSuccessWindow = (evt) => {
+  body.appendChild(successArea);
+  checkNClose(evt);
+  // const successButton = document.querySelector('.success__button');
+  // const checkNClose = (e) => {
+  //   e.preventDefault();
+  //   if (checkEsc || e.target !== successArea || e.target.closest(successButton)) {
+  //     closeSuccessWindow();
+  //     document.removeEventListener('keydown', checkNClose);
+  //     document.body.removeEventListener('click', checkNClose);
+  //   }
+  // };
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
@@ -152,9 +193,11 @@ const sendFormData = (onSuccess) => {
       formData.append('comments', commentTextArea.value);
       formData.append('hashtags', hashTagsInput.value);
 
-      sendData(formData).then(onSuccess).then(unblockButton());
+      sendData(formData)
+        .then(onSuccess)
+        .catch(showErrorWindow())
+        .finally(unblockButton());
     }
   });
 };
 sendFormData(showSuccessWindow);
-//
