@@ -119,11 +119,11 @@ const closeSuccessWindow = () => {
 };
 
 const checkNClose = (evt) => {
-  if (evt.keyCode === 27 || !evt.target.closest('.success') || evt.target.closest('.success__button')) {
+  if (evt.keyCode === 27 || !evt.target.closest('.success__inner') || evt.target.closest('.success__button')) {
     closeSuccessWindow();
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
-  } else if (evt.keyCode === 27 || !evt.target.closest('.error') || evt.target.closest(document.querySelector('.error__button'))) {
+  } else if (document.body.contains(errorArea) && (evt.keyCode === 27 || !evt.target.closest('.error__inner') || evt.target.closest(document.querySelector('.error__button')))) {
     closeErrorWindow();
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
@@ -174,4 +174,4 @@ const sendFormData = (onSuccess) => {
     }
   });
 };
-sendFormData(showSuccessWindow);
+export{sendFormData,showSuccessWindow};
