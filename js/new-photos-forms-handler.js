@@ -1,4 +1,5 @@
 import { sendData } from './api';
+import { clear } from './filter-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
@@ -11,7 +12,6 @@ const imgPreview = document.querySelector('.img-upload__preview');
 const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
 const errorWindowTemplate = document.querySelector('#error').content;
-const effectLevelValue = document.querySelector('.effect-level__value').value;
 const submitButton = document.querySelector('.img-upload__submit');
 
 
@@ -103,32 +103,44 @@ const openPhotoEditor = (evt) => {
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
-let successArea = successWindowTemplate.cloneNode(true);
-let errorArea = errorWindowTemplate.cloneNode(true);
+// let successArea = successWindowTemplate.cloneNode(true);
+// let errorArea = errorWindowTemplate.cloneNode(true);
+const successArea = successWindowTemplate.cloneNode(true).querySelector('.success');
+const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
 
 
 const closeErrorWindow = () => {
-  errorArea = document.querySelector('.error');
+  // errorArea = document.querySelector('.error');
   body.removeChild(errorArea);
   imgUploadClose();
 };
 const closeSuccessWindow = () => {
-  successArea = document.querySelector('.success');
+  // successArea = document.querySelector('.success');
   body.removeChild(successArea);
   imgUploadClose();
 };
 
 const checkNClose = (evt) => {
-  if (evt.keyCode === 27 || !evt.target.closest('.success__inner') || evt.target.closest('.success__button')) {
+  // errorArea = document.querySelector('.error');
+  // successArea = document.querySelector('.success');
+  if (document.body.contains(successArea) && (evt.keyCode === 27 || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
     closeSuccessWindow();
+  } else if (document.body.contains(errorArea) && (evt.keyCode === 27 || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
-  } else if (document.body.contains(errorArea) && (evt.keyCode === 27 || !evt.target.closest('.error__inner') || evt.target.closest(document.querySelector('.error__button')))) {
     closeErrorWindow();
-    document.removeEventListener('keydown', checkNClose);
-    document.body.removeEventListener('click', checkNClose);
   }
 };
+const showSuccessWindow = () => {
+  body.appendChild(successArea);
+
+
+  document.addEventListener('keydown', checkNClose);
+  document.body.addEventListener('click', checkNClose);
+};
+
 const showErrorWindow = () => {
 
   body.appendChild(errorArea);
@@ -137,14 +149,6 @@ const showErrorWindow = () => {
   document.body.addEventListener('click', checkNClose);
 };
 
-
-const showSuccessWindow = () => {
-  body.appendChild(successArea);
-
-
-  document.addEventListener('keydown', checkNClose);
-  document.body.addEventListener('click', checkNClose);
-};
 
 const blockButton = () => {
   submitButton.setAttribute('disabled', true);
@@ -163,15 +167,14 @@ const sendFormData = (onSuccess) => {
       blockButton();
       const formData = new FormData(evt.target);
 
-      formData.append('effectLevel', effectLevelValue);
-      formData.append('comments', commentTextArea.value);
-      formData.append('hashtags', hashTagsInput.value);
-
       sendData(formData)
         .then(onSuccess)
         .catch(showErrorWindow)
+        .then(clear)
         .finally(unblockButton);
+
     }
   });
 };
+// sendFormData(showSuccessWindow);
 export{sendFormData,showSuccessWindow};
