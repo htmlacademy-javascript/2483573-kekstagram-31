@@ -148,5 +148,6 @@ const clear = () => {
   filterValue = '';
   hide();
   effectNone.checked = true;
+  imgPreview.style.transform = `scale(${1})`;
 };
 export{clear};

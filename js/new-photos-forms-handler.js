@@ -14,6 +14,10 @@ const successWindowTemplate = document.querySelector('#success').content;
 const errorWindowTemplate = document.querySelector('#error').content;
 const submitButton = document.querySelector('.img-upload__submit');
 const scaleControlField = document.querySelector('.scale__control--value');
+const successArea = successWindowTemplate.cloneNode(true).querySelector('.success');
+const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
+
+
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -79,7 +83,7 @@ const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
 const onEsc = (evt) => {
-  if (evt.keyCode === 27 && !checkFocusOnInputFields()) {
+  if (evt.keyCode === 27 && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
     evt.preventDefault();
     imgUploadClose();
   }
@@ -105,14 +109,12 @@ const openPhotoEditor = (evt) => {
 imgUploadInput.addEventListener('change', openPhotoEditor);
 // let successArea = successWindowTemplate.cloneNode(true);
 // let errorArea = errorWindowTemplate.cloneNode(true);
-const successArea = successWindowTemplate.cloneNode(true).querySelector('.success');
-const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
 
 
 const closeErrorWindow = () => {
   // errorArea = document.querySelector('.error');
   body.removeChild(errorArea);
-  imgUploadClose();
+
 };
 const closeSuccessWindow = () => {
   // successArea = document.querySelector('.success');
