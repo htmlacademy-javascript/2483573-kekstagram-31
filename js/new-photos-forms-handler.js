@@ -13,8 +13,7 @@ const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
 const errorWindowTemplate = document.querySelector('#error').content;
 const submitButton = document.querySelector('.img-upload__submit');
-
-
+const scaleControlField = document.querySelector('.scale__control--value');
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -95,6 +94,7 @@ const loadPreviews = () => {
 };
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
+  scaleControlField.value = '100%';
   imgUploadHud.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onEsc);

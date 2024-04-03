@@ -10,7 +10,7 @@ const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 const scaleControlField = document.querySelector('.scale__control--value');
 imgEffectlevel.classList.add('hidden');
-
+// scaleControlField.value = '100%';
 const settings = {
   range: {
     min: 0,
@@ -147,6 +147,6 @@ const clear = () => {
   scaleControlField.value = '';
   filterValue = '';
   hide();
-
+  effectNone.checked = true;
 };
 export{clear};
