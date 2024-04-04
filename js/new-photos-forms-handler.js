@@ -1,3 +1,6 @@
+import { sendData } from './api';
+import { clear } from './filter-redactor';
+import { scaleDec,scaleInc } from './scale-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
@@ -6,15 +9,22 @@ const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
-// const hashTagsArr = hashTagsInput.value.split(',');
-
+const imgPreview = document.querySelector('.img-upload__preview');
+const effectPreview = document.querySelectorAll('.effects__preview');
+const successWindowTemplate = document.querySelector('#success').content;
+const errorWindowTemplate = document.querySelector('#error').content;
+const submitButton = document.querySelector('.img-upload__submit');
+const scaleControlField = document.querySelector('.scale__control--value');
+const successArea = successWindowTemplate.cloneNode(true).querySelector('.success');
+const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
+const scaleControlSmaller = document.querySelector('.scale__control--smaller');
+const scaleControlBigger = document.querySelector('.scale__control--bigger');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
-  errorTextParent:'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  errorTextClass: 'img-upload__field-wrapper--error', // Класс, обозначающий невалидное поле
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__field-wrapper--error',
 });
-
 
 const hashTagsArrMaxLength = 5;
 const validateHashTagsNumber = (value) => {
@@ -23,7 +33,7 @@ const validateHashTagsNumber = (value) => {
 };
 const validateHashTagsText = (value) => {
   const hashTagsArr = value.split(' ');
-  if(hashTagsInput.value !== '') {
+  if (hashTagsInput.value !== '') {
     return hashTagsArr.every((element) => regex.test(element));
   }
   return true;
@@ -33,55 +43,151 @@ const validateComments = (value) => value.length <= maxCommentLength;
 const validateUniqueHashTags = (value) => {
   const hashTagsArr = value.split(' ');
   const lowerCaseHashTagsArr = hashTagsArr.map((tag) => tag.toLowerCase());
-  const duplicates = new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
+  const duplicates =
+    new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
   if (duplicates) {
     return false;
   }
   return true; // Add this line to return true if no duplicates are found
-
 };
 
-pristine.addValidator(hashTagsInput,validateUniqueHashTags,'Хэштеги не должны повторяться ');
-pristine.addValidator(commentTextArea,
+pristine.addValidator(
+  hashTagsInput,
+  validateUniqueHashTags,
+  'Хэштеги не должны повторяться '
+);
+pristine.addValidator(
+  commentTextArea,
   validateComments,
-  'Max length коментария 140 symbols');
-pristine.addValidator(hashTagsInput,
+  'Max length коментария 140 symbols'
+);
+pristine.addValidator(
+  hashTagsInput,
   validateHashTagsText,
-  'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',false);
-pristine.addValidator(hashTagsInput,validateHashTagsNumber,'Максимум 5 хэштегов братик');
-
+  'Хеш-тег не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи и др. Максимальная длина одного хеш-тега - 20 символов, включая решетку.',
+  false
+);
+pristine.addValidator(
+  hashTagsInput,
+  validateHashTagsNumber,
+  'Максимум 5 хэштегов братик'
+);
 
 const imgUploadClose = () => {
-
   imgUploadHud.classList.add('hidden');
   body.classList.remove('modal-open');
   imgUploadInput.value = '';
   hashTagsInput.value = '';
   commentTextArea.value = '';
+  scaleControlField.value = '100%';
+  imgPreview.style.transform = `scale(${1})`;
+  clear();
+  scaleControlSmaller.removeEventListener('click', scaleDec);
+  scaleControlBigger.removeEventListener('click', scaleInc);
 };
 
-const checkFocusOnInputFields = () => document.activeElement === hashTagsInput || document.activeElement === commentTextArea;
+const checkFocusOnInputFields = () =>
+  document.activeElement === hashTagsInput ||
+  document.activeElement === commentTextArea;
 const onEsc = (evt) => {
-  if (evt.keyCode === 27 && !checkFocusOnInputFields()) {
+  if (evt.keyCode === 27 && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
     evt.preventDefault();
     imgUploadClose();
   }
 };
+const loadPreviews = () => {
+  const file = imgUploadInput.files[0];
+  const imgUrl = URL.createObjectURL(file);
+  imgPreview.querySelector('img').src = imgUrl;
+  effectPreview.forEach((element) => {
+    element.style.backgroundImage = `url(${imgUrl})`;
+  });
+};
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
+  scaleControlField.value = '100%';
   imgUploadHud.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown',onEsc);
-  imgUploadCloseButton.addEventListener('click', imgUploadClose);
+  document.addEventListener('keydown', onEsc);
+  scaleControlSmaller.addEventListener('click', scaleDec);
+  scaleControlBigger.addEventListener('click', scaleInc);
 
+  loadPreviews();
+
+  imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
+// let successArea = successWindowTemplate.cloneNode(true);
+// let errorArea = errorWindowTemplate.cloneNode(true);
 
 
-uploadForm.addEventListener('submit',(event) => {
-  event.preventDefault();
-  const isValid = pristine.validate();
-  if(isValid){
-    uploadForm.submit();
+const closeErrorWindow = () => {
+  // errorArea = document.querySelector('.error');
+  body.removeChild(errorArea);
+  clear();
+
+};
+const closeSuccessWindow = () => {
+  // successArea = document.querySelector('.success');
+  body.removeChild(successArea);
+  imgUploadClose();
+};
+
+const checkNClose = (evt) => {
+  // errorArea = document.querySelector('.error');
+  // successArea = document.querySelector('.success');
+  if (document.body.contains(successArea) && (evt.keyCode === 27 || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
+    closeSuccessWindow();
+  } else if (document.body.contains(errorArea) && (evt.keyCode === 27 || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
+    document.removeEventListener('keydown', checkNClose);
+    document.body.removeEventListener('click', checkNClose);
+    closeErrorWindow();
   }
-});
+};
+const showSuccessWindow = () => {
+  body.appendChild(successArea);
+
+
+  document.addEventListener('keydown', checkNClose);
+  document.body.addEventListener('click', checkNClose);
+};
+
+const showErrorWindow = () => {
+
+  body.appendChild(errorArea);
+
+  document.addEventListener('keydown', checkNClose);
+  document.body.addEventListener('click', checkNClose);
+};
+
+
+const blockButton = () => {
+  submitButton.setAttribute('disabled', true);
+};
+
+const unblockButton = () => {
+  submitButton.removeAttribute('disabled');
+};
+
+const sendFormData = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      blockButton();
+      const formData = new FormData(evt.target);
+
+      sendData(formData)
+        .then(onSuccess)
+        .catch(showErrorWindow)
+        // .then(clear)
+        .finally(unblockButton);
+
+    }
+  });
+};
+// sendFormData(showSuccessWindow);
+export{sendFormData,showSuccessWindow};

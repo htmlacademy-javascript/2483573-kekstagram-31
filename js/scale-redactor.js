@@ -1,5 +1,4 @@
-const scaleControlSmaller = document.querySelector('.scale__control--smaller');
-const scaleControlBigger = document.querySelector('.scale__control--bigger');
+
 const scaleControlField = document.querySelector('.scale__control--value');
 const imgPreview = document.querySelector('.img-upload__preview');
 const scaleStep = 25;
@@ -17,6 +16,7 @@ const updateValue = () => {
 };
 
 const scaleDec = () => {
+  scaleControlFieldNum = parseInt(scaleControlField.value, 10);
   if (scaleControlFieldNum > scaleMin) {
     scaleControlFieldNum -= scaleStep;
     updateScale();
@@ -25,6 +25,7 @@ const scaleDec = () => {
 };
 
 const scaleInc = () => {
+  scaleControlFieldNum = parseInt(scaleControlField.value, 10);
   if (scaleControlFieldNum < scaleMax) {
     scaleControlFieldNum += scaleStep;
     updateScale();
@@ -32,5 +33,4 @@ const scaleInc = () => {
   }
 };
 
-scaleControlSmaller.addEventListener('click', scaleDec);
-scaleControlBigger.addEventListener('click', scaleInc);
+export{scaleInc,scaleDec,updateScale,updateValue};
