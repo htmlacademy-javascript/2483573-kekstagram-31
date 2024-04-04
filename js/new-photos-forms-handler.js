@@ -1,5 +1,6 @@
 import { sendData } from './api';
 import { clear } from './filter-redactor';
+import { scaleDec,scaleInc } from './scale-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
@@ -16,7 +17,8 @@ const submitButton = document.querySelector('.img-upload__submit');
 const scaleControlField = document.querySelector('.scale__control--value');
 const successArea = successWindowTemplate.cloneNode(true).querySelector('.success');
 const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
-
+const scaleControlSmaller = document.querySelector('.scale__control--smaller');
+const scaleControlBigger = document.querySelector('.scale__control--bigger');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -102,6 +104,9 @@ const openPhotoEditor = (evt) => {
   imgUploadHud.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onEsc);
+  scaleControlSmaller.addEventListener('click', scaleDec);
+  scaleControlBigger.addEventListener('click', scaleInc);
+
   loadPreviews();
 
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
