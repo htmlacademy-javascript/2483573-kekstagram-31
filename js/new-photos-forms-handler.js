@@ -79,6 +79,11 @@ const imgUploadClose = () => {
   imgUploadInput.value = '';
   hashTagsInput.value = '';
   commentTextArea.value = '';
+  scaleControlField.value = '100%';
+  imgPreview.style.transform = `scale(${1})`;
+  clear();
+  scaleControlSmaller.removeEventListener('click', scaleDec);
+  scaleControlBigger.removeEventListener('click', scaleInc);
 };
 
 const checkFocusOnInputFields = () =>
@@ -119,6 +124,7 @@ imgUploadInput.addEventListener('change', openPhotoEditor);
 const closeErrorWindow = () => {
   // errorArea = document.querySelector('.error');
   body.removeChild(errorArea);
+  clear();
 
 };
 const closeSuccessWindow = () => {
@@ -177,7 +183,7 @@ const sendFormData = (onSuccess) => {
       sendData(formData)
         .then(onSuccess)
         .catch(showErrorWindow)
-        .then(clear)
+        // .then(clear)
         .finally(unblockButton);
 
     }

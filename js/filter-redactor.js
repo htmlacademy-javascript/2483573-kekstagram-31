@@ -1,4 +1,3 @@
-import { updateValue } from './scale-redactor';
 const effectNone = document.querySelector('#effect-none');
 const effectChrome = document.querySelector('#effect-chrome');
 const effectSepia = document.querySelector('#effect-sepia');
@@ -9,9 +8,7 @@ const imgPreview = document.querySelector('.img-upload__preview');
 const imgEffectlevel = document.querySelector('.effect-level__slider');
 const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
-const scaleControlField = document.querySelector('.scale__control--value');
 imgEffectlevel.classList.add('hidden');
-// scaleControlField.value = '100%';
 const settings = {
   range: {
     min: 0,
@@ -145,10 +142,7 @@ effectMarvin.addEventListener('change', createMarvin);
 effectNone.addEventListener('change', hide);
 effectPhobos.addEventListener('change', createPhobos);
 const clear = () => {
-  scaleControlField.value = '100%';
-  updateValue();
   filterValue = '';
-
   hide();
   effectNone.checked = true;
 

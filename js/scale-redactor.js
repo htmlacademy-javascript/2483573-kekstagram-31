@@ -16,6 +16,7 @@ const updateValue = () => {
 };
 
 const scaleDec = () => {
+  scaleControlFieldNum = parseInt(scaleControlField.value, 10);
   if (scaleControlFieldNum > scaleMin) {
     scaleControlFieldNum -= scaleStep;
     updateScale();
@@ -24,6 +25,7 @@ const scaleDec = () => {
 };
 
 const scaleInc = () => {
+  scaleControlFieldNum = parseInt(scaleControlField.value, 10);
   if (scaleControlFieldNum < scaleMax) {
     scaleControlFieldNum += scaleStep;
     updateScale();
