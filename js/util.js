@@ -1,17 +1,23 @@
-// Получаем рандом число
 const getRandomNumber = function (a, b) {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
+  const range = upper - lower + 1;
+
+  if (range <= 0) {
+    throw new Error('Invalid range');
+  }
+
   let previousNumber = null;
   let randomNumber;
+
   do {
-    randomNumber = Math.floor(Math.random() * (upper - lower + 1) + lower);
+    randomNumber = Math.floor(Math.random() * range) + lower;
   } while (randomNumber === previousNumber);
+
   previousNumber = randomNumber;
 
   return randomNumber;
 };
-
 // Функция для генерации случайного комментария
 const generateRandomComment = function () {
   const names = [
@@ -55,13 +61,13 @@ export const comparePhotos = {
 
     return commentLengthB - commentLengthA;
   },
-  random : () => getRandomNumber(1,10)
+  random : (list) => list.map(() => list[getRandomNumber(0,24)]).slice(0,10)
 };
 
 // Функция взята из интернета и доработана
 // Источник - https://www.freecodecamp.org/news/javascript-debounce-example
 
-function debounce (callback, timeoutDelay = 500) {
+export function debounce (callback, timeoutDelay = 500) {
   // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
   // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
   let timeoutId;
