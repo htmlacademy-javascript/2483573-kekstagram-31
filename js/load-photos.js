@@ -48,7 +48,7 @@ defaultButton.addEventListener('click', setDefaultClick);
 randomButton.addEventListener('click', setRandomClick);
 
 const loadPhotos = (photos) => {
-  const sortedPhotos = photos.slice(); // Default to the original order
+  const sortedPhotos = photos.slice();
   if (discussedIsClicked) {
     sortedPhotos.sort(comparePhotos.disscused);
   } if (randomIsClicked) {
@@ -57,7 +57,7 @@ const loadPhotos = (photos) => {
     sortedPhotos.slice();
   }
 
-  photosList.innerHTML = ''; // Clear the photosList before appending
+
   sortedPhotos.forEach(({ url, description, likes, comments, id }) => {
     const photosParts = picturesTemplate.cloneNode(true);
     photosParts.querySelector('img').src = url;
@@ -71,9 +71,10 @@ const loadPhotos = (photos) => {
       createdPhotosFragment.append(photosParts);
     });
     // photosList.innerHTML = '';
-    photosList.append(createdPhotosFragment);
+
 
   });
+  photosList.append(createdPhotosFragment);
 };
 let dataErrorArea = dataErrorTemplate.cloneNode(true);
 
