@@ -8,15 +8,15 @@ import './open-close-full-photo.js';
 import './new-photos-forms-handler.js';
 import './filter-redactor.js';
 const imgFilter = document.querySelector('.img-filters');
-// import {generatePhotosArray} from './post.js';
-// const photosArray = generatePhotosArray();
+
+
 getData()
   .then((loadedPhotos) => {
     console.log(loadedPhotos);
-    debounce(loadPhotos(loadedPhotos));
-    // setDefaultClick();
-    // setRandomClick();
-    // setDisscusedClick();
+    const debouncedLoadPhotos = debounce(() => {
+      loadPhotos(loadedPhotos);
+    }, 500);
+    debouncedLoadPhotos();
     imgFilter.classList.remove('img-filters--inactive');
   })
   .catch(

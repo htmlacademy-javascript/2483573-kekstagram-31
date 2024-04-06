@@ -1,22 +1,36 @@
-const getRandomNumber = function (a, b) {
+const uniqueNumbersSet = new Set();
+
+
+const getRandomNumber = function(a, b) {
+
   const lower = Math.ceil(Math.min(a, b));
+
   const upper = Math.floor(Math.max(a, b));
-  const range = upper - lower + 1;
 
-  if (range <= 0) {
-    throw new Error('Invalid range');
-  }
 
-  let previousNumber = null;
   let randomNumber;
 
   do {
-    randomNumber = Math.floor(Math.random() * range) + lower;
-  } while (randomNumber === previousNumber);
 
-  previousNumber = randomNumber;
+    randomNumber = Math.floor(Math.random() * (upper - lower + 1) + lower);
+
+  } while (uniqueNumbersSet.has(randomNumber));
+
+
+  uniqueNumbersSet.add(randomNumber);
+
+
+  if (uniqueNumbersSet.size === upper - lower + 1) {
+
+    // Reset the set if all numbers in the range have been generated
+
+    uniqueNumbersSet.clear();
+
+  }
+
 
   return randomNumber;
+
 };
 // Функция для генерации случайного комментария
 const generateRandomComment = function () {
