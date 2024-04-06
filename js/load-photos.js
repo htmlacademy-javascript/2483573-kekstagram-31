@@ -7,47 +7,60 @@ const randomButton = document.querySelector('#filter-random');
 const defaultButton = document.querySelector('#filter-default');
 const createdPhotosFragment = document.createDocumentFragment();
 const photosList = document.querySelector('.pictures');
-const imgFilter = document.querySelector('.img-filters'); // Use querySelector instead of querySelectorAll
+
 
 let discussedIsClicked = false;
 let randomIsClicked = false;
 let defaultIsClicked = true;
+const activeClass = 'img-filters__button--active';
+const clearPhotos = () => {
+  const pictures = document.querySelectorAll('.picture');
+  pictures.forEach((picture) => picture.remove());
+};
 
-const clickedFalse = () => {
+const focusRemover = () => {
   discussedIsClicked = false;
   randomIsClicked = false;
   defaultIsClicked = false;
+  disscusedButton.classList.remove(`${activeClass}`);
+  randomButton.classList.remove(`${activeClass}`);
+
 };
 
-const setDefaultClick = () => {
-  clickedFalse();
-  defaultIsClicked = true;
-  imgFilter.classList.remove('img-filters__button--active');
-  defaultButton.classList.add('img-filters__button--active');
 
+const setDefaultClick = () => {
+  if (!defaultIsClicked) {
+    focusRemover();
+    defaultIsClicked = true;
+    defaultButton.classList.add(activeClass);
+  }
 };
 
 const setRandomClick = () => {
-  clickedFalse();
-  randomIsClicked = true;
-  imgFilter.classList.remove('img-filters__button--active');
-  randomButton.classList.add('img-filters__button--active');
-
+  if (!randomIsClicked) {
+    focusRemover();
+    randomIsClicked = true;
+    defaultButton.classList.remove(`${activeClass}`);
+    randomButton.classList.add(activeClass);
+  }
 };
 
 const setDisscusedClick = () => {
-  clickedFalse();
-  discussedIsClicked = true;
-  imgFilter.classList.remove('img-filters__button--active');
-  disscusedButton.classList.add('img-filters__button--active');
-
+  if (!discussedIsClicked) {
+    focusRemover();
+    discussedIsClicked = true;
+    defaultButton.classList.remove(`${activeClass}`);
+    disscusedButton.classList.add(activeClass);
+  }
 };
+
 
 disscusedButton.addEventListener('click', setDisscusedClick);
 defaultButton.addEventListener('click', setDefaultClick);
 randomButton.addEventListener('click', setRandomClick);
 
 const loadPhotos = (photos) => {
+  clearPhotos();
   const sortedPhotos = photos.slice();
   if (discussedIsClicked) {
     sortedPhotos.sort(comparePhotos.disscused);
@@ -65,17 +78,17 @@ const loadPhotos = (photos) => {
     photosParts.querySelector('.picture__likes').textContent = likes;
     photosParts.querySelector('.picture__comments').textContent = comments.length;
     photosParts.dataset.id = id;
-    photosList.append(createdPhotosFragment);
+    createdPhotosFragment.append(photosParts);
     photosParts.addEventListener('click', (event) => {
       const currentPicture = photos.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
       openBigPhoto(currentPicture);
-      createdPhotosFragment.append(photosParts);
+
     });
     // photosList.innerHTML = '';
 
 
   });
-
+  photosList.append(createdPhotosFragment);
 };
 let dataErrorArea = dataErrorTemplate.cloneNode(true);
 
