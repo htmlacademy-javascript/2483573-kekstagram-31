@@ -65,6 +65,7 @@ const loadPhotos = (photos) => {
     photosParts.querySelector('.picture__likes').textContent = likes;
     photosParts.querySelector('.picture__comments').textContent = comments.length;
     photosParts.dataset.id = id;
+    photosList.append(createdPhotosFragment);
     photosParts.addEventListener('click', (event) => {
       const currentPicture = photos.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
       openBigPhoto(currentPicture);
@@ -74,7 +75,7 @@ const loadPhotos = (photos) => {
 
 
   });
-  photosList.append(createdPhotosFragment);
+
 };
 let dataErrorArea = dataErrorTemplate.cloneNode(true);
 
