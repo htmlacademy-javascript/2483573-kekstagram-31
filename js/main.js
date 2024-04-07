@@ -20,7 +20,7 @@ getData()
     imgFilter.classList.remove('img-filters--inactive');
   })
   .catch(
-    () => showDataErrorMessage
+    () => showDataErrorMessage()
   );
 sendFormData(showSuccessWindow);
 

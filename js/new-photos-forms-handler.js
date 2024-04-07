@@ -4,12 +4,12 @@ import { scaleDec,scaleInc } from './scale-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
-const body = document.querySelector('body');
 const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
 const imgPreview = document.querySelector('.img-upload__preview');
+const imgElement = imgPreview.querySelector('img');
 const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
 const errorWindowTemplate = document.querySelector('#error').content;
@@ -75,13 +75,14 @@ pristine.addValidator(
 
 const imgUploadClose = () => {
   imgUploadHud.classList.add('hidden');
-  body.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
   imgUploadInput.value = '';
   hashTagsInput.value = '';
   commentTextArea.value = '';
   scaleControlField.value = '100%';
-  imgPreview.style.transform = `scale(${1})`;
+  imgElement.style.transform = `scale(${1})`;
   clear();
+  pristine.reset();
   scaleControlSmaller.removeEventListener('click', scaleDec);
   scaleControlBigger.removeEventListener('click', scaleInc);
 };
@@ -102,16 +103,18 @@ const loadPreviews = () => {
   effectPreview.forEach((element) => {
     element.style.backgroundImage = `url(${imgUrl})`;
   });
+
+
 };
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
   scaleControlField.value = '100%';
   imgUploadHud.classList.remove('hidden');
-  body.classList.add('modal-open');
+  document.body.classList.add('modal-open');
   document.addEventListener('keydown', onEsc);
   scaleControlSmaller.addEventListener('click', scaleDec);
   scaleControlBigger.addEventListener('click', scaleInc);
-
+  clear();
   loadPreviews();
 
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
@@ -123,13 +126,13 @@ imgUploadInput.addEventListener('change', openPhotoEditor);
 
 const closeErrorWindow = () => {
   // errorArea = document.querySelector('.error');
-  body.removeChild(errorArea);
-  clear();
+  document.body.removeChild(errorArea);
+  // clear();
 
 };
 const closeSuccessWindow = () => {
   // successArea = document.querySelector('.success');
-  body.removeChild(successArea);
+  document.body.removeChild(successArea);
   imgUploadClose();
 };
 
@@ -147,7 +150,7 @@ const checkNClose = (evt) => {
   }
 };
 const showSuccessWindow = () => {
-  body.appendChild(successArea);
+  document.body.appendChild(successArea);
 
 
   document.addEventListener('keydown', checkNClose);
@@ -156,7 +159,7 @@ const showSuccessWindow = () => {
 
 const showErrorWindow = () => {
 
-  body.appendChild(errorArea);
+  document.body.appendChild(errorArea);
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
@@ -181,7 +184,10 @@ const sendFormData = (onSuccess) => {
       const formData = new FormData(evt.target);
 
       sendData(formData)
-        .then(onSuccess)
+        .then(() => {
+          imgUploadClose();
+          onSuccess();
+        })
         .catch(showErrorWindow)
         // .then(clear)
         .finally(unblockButton);
