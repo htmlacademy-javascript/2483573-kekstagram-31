@@ -7,12 +7,12 @@ const randomButton = document.querySelector('#filter-random');
 const defaultButton = document.querySelector('#filter-default');
 const createdPhotosFragment = document.createDocumentFragment();
 const photosList = document.querySelector('.pictures');
-
-
+const activeClass = 'img-filters__button--active';
+const TIMER_DELAY = 500;
 let discussedIsClicked = false;
 let randomIsClicked = false;
 let defaultIsClicked = true;
-const activeClass = 'img-filters__button--active';
+let timer;
 const clearPhotos = () => {
   const pictures = document.querySelectorAll('.picture');
   pictures.forEach((picture) => picture.remove());
@@ -30,28 +30,31 @@ const focusRemover = () => {
 
 const setDefaultClick = () => {
   if (!defaultIsClicked) {
+    clearTimeout(timer);
     focusRemover();
     defaultIsClicked = true;
-    loadPhotos();
+    timer = setTimeout(() => loadPhotos(), TIMER_DELAY);
     defaultButton.classList.add(activeClass);
   }
 };
 
 const setRandomClick = () => {
   if (!randomIsClicked) {
+    clearTimeout(timer);
     focusRemover();
     randomIsClicked = true;
     defaultButton.classList.remove(`${activeClass}`);
-    loadPhotos();
+    timer = setTimeout(() => loadPhotos(), TIMER_DELAY);
     randomButton.classList.add(activeClass);
   }
 };
 
 const setDisscusedClick = () => {
   if (!discussedIsClicked) {
+    clearTimeout(timer);
     focusRemover();
     discussedIsClicked = true;
-    loadPhotos();
+    timer = setTimeout(() => loadPhotos(), TIMER_DELAY);
     defaultButton.classList.remove(`${activeClass}`);
     disscusedButton.classList.add(activeClass);
   }
@@ -91,7 +94,6 @@ function loadPhotos (photos) {
       openBigPhoto(currentPicture);
 
     });
-    // photosList.innerHTML = '';
 
 
   });

@@ -29,12 +29,14 @@ const pristine = new Pristine(uploadForm, {
 const hashTagsArrMaxLength = 5;
 const validateHashTagsNumber = (value) => {
   const hashTagsArr = value.split(' ');
-  return hashTagsArr.length !== hashTagsArrMaxLength;
+  const filteredArr = hashTagsArr.filter(Boolean);
+  return filteredArr.length <= hashTagsArrMaxLength;
 };
 const validateHashTagsText = (value) => {
   const hashTagsArr = value.split(' ');
+  const filteredArr = hashTagsArr.filter(Boolean);
   if (hashTagsInput.value !== '') {
-    return hashTagsArr.every((element) => regex.test(element));
+    return filteredArr.every((element) => regex.test(element));
   }
   return true;
 };
@@ -42,7 +44,8 @@ const maxCommentLength = 140;
 const validateComments = (value) => value.length <= maxCommentLength;
 const validateUniqueHashTags = (value) => {
   const hashTagsArr = value.split(' ');
-  const lowerCaseHashTagsArr = hashTagsArr.map((tag) => tag.toLowerCase());
+  const filteredArr = hashTagsArr.filter(Boolean);
+  const lowerCaseHashTagsArr = filteredArr.map((tag) => tag.toLowerCase());
   const duplicates =
     new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
   if (duplicates) {

@@ -2,7 +2,6 @@
 import { loadPhotos,showDataErrorMessage } from './load-photos.js';
 import { sendFormData , showSuccessWindow} from './new-photos-forms-handler.js';
 import { getData } from './api.js';
-import { debounce } from './util.js';
 import './load-photos.js';
 import './open-close-full-photo.js';
 import './new-photos-forms-handler.js';
@@ -13,10 +12,7 @@ const imgFilter = document.querySelector('.img-filters');
 getData()
   .then((loadedPhotos) => {
     console.log(loadedPhotos);
-    const debouncedLoadPhotos = debounce(() => {
-      loadPhotos(loadedPhotos);
-    }, 500);
-    debouncedLoadPhotos();
+    loadPhotos(loadedPhotos);
     imgFilter.classList.remove('img-filters--inactive');
   })
   .catch(
