@@ -8,30 +8,30 @@ const SCALE_MAX = 100;
 
 let scaleControlFieldNum = parseInt(scaleControlField.value, 10);
 
-const updateScale = () => {
+const scaleUpdateHandler = () => {
   imgElement.style.transform = `scale(${scaleControlFieldNum / 100})`;
 };
 
-const updateValue = () => {
+const valueUpdateHandler = () => {
   scaleControlField.value = `${scaleControlFieldNum.toString() }%`;
 };
 
-const scaleDec = () => {
+const onScaleDec = () => {
   scaleControlFieldNum = parseInt(scaleControlField.value, 10);
   if (scaleControlFieldNum > SCALE_MIN) {
     scaleControlFieldNum -= SCALE_STEP;
-    updateScale();
-    updateValue();
+    scaleUpdateHandler();
+    valueUpdateHandler();
   }
 };
 
-const scaleInc = () => {
+const onScaleInc = () => {
   scaleControlFieldNum = parseInt(scaleControlField.value, 10);
   if (scaleControlFieldNum < SCALE_MAX) {
     scaleControlFieldNum += SCALE_STEP;
-    updateScale();
-    updateValue();
+    scaleUpdateHandler();
+    valueUpdateHandler();
   }
 };
 
-export{scaleInc,scaleDec,updateScale,updateValue};
+export{onScaleInc,onScaleDec};

@@ -1,5 +1,8 @@
-import{openBigPhoto} from './open-close-full-photo.js';
+import{openBigPhotoHandler} from './open-close-full-photo.js';
 import { ComparePhotos} from './util.js';
+const ACTIVE_CLASS = 'img-filters__button--active';
+const TIMER_DELAY = 500;
+const ERROR_MESSAGE_TIME = 5000;
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const dataErrorTemplate = document.querySelector('#data-error').content;
 const disscusedButton = document.querySelector('#filter-discussed');
@@ -7,13 +10,12 @@ const randomButton = document.querySelector('#filter-random');
 const defaultButton = document.querySelector('#filter-default');
 const createdPhotosFragment = document.createDocumentFragment();
 const photosList = document.querySelector('.pictures');
-const ACTIVE_CLASS = 'img-filters__button--active';
-const TIMER_DELAY = 500;
-const ERROR_MESSAGE_TIME = 5000;
+
 let discussedIsClicked = false;
 let randomIsClicked = false;
 let defaultIsClicked = true;
 let timer;
+
 const clearPhotos = () => {
   const pictures = document.querySelectorAll('.picture');
   pictures.forEach((picture) => picture.remove());
@@ -92,7 +94,7 @@ function loadPhotos (photos) {
     createdPhotosFragment.append(photosParts);
     photosParts.addEventListener('click', (event) => {
       const currentPicture = list.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
-      openBigPhoto(currentPicture);
+      openBigPhotoHandler(currentPicture);
     }
 
     );

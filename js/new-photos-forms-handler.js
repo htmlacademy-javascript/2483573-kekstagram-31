@@ -1,6 +1,6 @@
 import { sendData } from './api';
 import { clear } from './filter-redactor';
-import { scaleDec,scaleInc } from './scale-redactor';
+import { onScaleDec,onScaleInc } from './scale-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;
 const ESC_KEYCODE = 27;
@@ -92,8 +92,8 @@ const imgUploadClose = () => {
   imgElement.style.transform = `scale(${1})`;
   clear();
   pristine.reset();
-  scaleControlSmaller.removeEventListener('click', scaleDec);
-  scaleControlBigger.removeEventListener('click', scaleInc);
+  scaleControlSmaller.removeEventListener('click', onScaleDec);
+  scaleControlBigger.removeEventListener('click', onScaleInc);
 };
 
 
@@ -126,8 +126,8 @@ const openPhotoEditor = (evt) => {
   imgUploadHud.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', checkOnEsc);
-  scaleControlSmaller.addEventListener('click', scaleDec);
-  scaleControlBigger.addEventListener('click', scaleInc);
+  scaleControlSmaller.addEventListener('click', onScaleDec);
+  scaleControlBigger.addEventListener('click', onScaleInc);
   clear();
   loadPreviews();
 
@@ -144,29 +144,29 @@ const closeSuccessWindow = () => {
   imgUploadClose();
 };
 
-const checkNClose = (evt) => {
+const submitAreasHandler = (evt) => {
 
   if (document.body.contains(successArea) && (evt.keyCode === ESC_KEYCODE || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
-    document.removeEventListener('keydown', checkNClose);
-    document.body.removeEventListener('click', checkNClose);
+    document.removeEventListener('keydown', submitAreasHandler);
+    document.body.removeEventListener('click', submitAreasHandler);
     closeSuccessWindow();
   } else if (document.body.contains(errorArea) && (evt.keyCode === ESC_KEYCODE || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
-    document.removeEventListener('keydown', checkNClose);
-    document.body.removeEventListener('click', checkNClose);
+    document.removeEventListener('keydown', submitAreasHandler);
+    document.body.removeEventListener('click', submitAreasHandler);
     closeErrorWindow();
   }
 };
 
 const showSuccessWindow = () => {
   document.body.appendChild(successArea);
-  document.addEventListener('keydown', checkNClose);
-  document.body.addEventListener('click', checkNClose);
+  document.addEventListener('keydown', submitAreasHandler);
+  document.body.addEventListener('click', submitAreasHandler);
 };
 
 const showErrorWindow = () => {
   document.body.appendChild(errorArea);
-  document.addEventListener('keydown', checkNClose);
-  document.body.addEventListener('click', checkNClose);
+  document.addEventListener('keydown', submitAreasHandler);
+  document.body.addEventListener('click', submitAreasHandler);
 };
 
 
