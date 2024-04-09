@@ -4,12 +4,12 @@ import { scaleDec,scaleInc } from './scale-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
-const body = document.querySelector('body');
 const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
 const imgPreview = document.querySelector('.img-upload__preview');
+const imgElement = imgPreview.querySelector('img');
 const effectPreview = document.querySelectorAll('.effects__preview');
 const successWindowTemplate = document.querySelector('#success').content;
 const errorWindowTemplate = document.querySelector('#error').content;
@@ -19,6 +19,8 @@ const successArea = successWindowTemplate.cloneNode(true).querySelector('.succes
 const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
 const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 const scaleControlBigger = document.querySelector('.scale__control--bigger');
+const MAX_HASHTAGS = 5;
+const ESC_KEYCODE = 27;
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -26,15 +28,17 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const hashTagsArrMaxLength = 5;
+
 const validateHashTagsNumber = (value) => {
   const hashTagsArr = value.split(' ');
-  return hashTagsArr.length !== hashTagsArrMaxLength;
+  const filteredArr = hashTagsArr.filter(Boolean);
+  return filteredArr.length <= MAX_HASHTAGS;
 };
 const validateHashTagsText = (value) => {
   const hashTagsArr = value.split(' ');
+  const filteredArr = hashTagsArr.filter(Boolean);
   if (hashTagsInput.value !== '') {
-    return hashTagsArr.every((element) => regex.test(element));
+    return filteredArr.every((element) => regex.test(element));
   }
   return true;
 };
@@ -42,13 +46,14 @@ const maxCommentLength = 140;
 const validateComments = (value) => value.length <= maxCommentLength;
 const validateUniqueHashTags = (value) => {
   const hashTagsArr = value.split(' ');
-  const lowerCaseHashTagsArr = hashTagsArr.map((tag) => tag.toLowerCase());
+  const filteredArr = hashTagsArr.filter(Boolean);
+  const lowerCaseHashTagsArr = filteredArr.map((tag) => tag.toLowerCase());
   const duplicates =
     new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
   if (duplicates) {
     return false;
   }
-  return true; // Add this line to return true if no duplicates are found
+  return true;
 };
 
 pristine.addValidator(
@@ -75,13 +80,14 @@ pristine.addValidator(
 
 const imgUploadClose = () => {
   imgUploadHud.classList.add('hidden');
-  body.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
   imgUploadInput.value = '';
   hashTagsInput.value = '';
   commentTextArea.value = '';
   scaleControlField.value = '100%';
-  imgPreview.style.transform = `scale(${1})`;
+  imgElement.style.transform = `scale(${1})`;
   clear();
+  pristine.reset();
   scaleControlSmaller.removeEventListener('click', scaleDec);
   scaleControlBigger.removeEventListener('click', scaleInc);
 };
@@ -89,8 +95,8 @@ const imgUploadClose = () => {
 const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
-const onEsc = (evt) => {
-  if (evt.keyCode === 27 && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
+const checkOnEsc = (evt) => {
+  if (evt.keyCode === ESC_KEYCODE && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
     evt.preventDefault();
     imgUploadClose();
   }
@@ -102,52 +108,51 @@ const loadPreviews = () => {
   effectPreview.forEach((element) => {
     element.style.backgroundImage = `url(${imgUrl})`;
   });
+
+
 };
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
   scaleControlField.value = '100%';
   imgUploadHud.classList.remove('hidden');
-  body.classList.add('modal-open');
-  document.addEventListener('keydown', onEsc);
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', checkOnEsc);
   scaleControlSmaller.addEventListener('click', scaleDec);
   scaleControlBigger.addEventListener('click', scaleInc);
-
+  clear();
   loadPreviews();
 
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
-// let successArea = successWindowTemplate.cloneNode(true);
-// let errorArea = errorWindowTemplate.cloneNode(true);
 
 
 const closeErrorWindow = () => {
-  // errorArea = document.querySelector('.error');
-  body.removeChild(errorArea);
-  clear();
+
+  document.body.removeChild(errorArea);
+
 
 };
 const closeSuccessWindow = () => {
-  // successArea = document.querySelector('.success');
-  body.removeChild(successArea);
+
+  document.body.removeChild(successArea);
   imgUploadClose();
 };
 
 const checkNClose = (evt) => {
-  // errorArea = document.querySelector('.error');
-  // successArea = document.querySelector('.success');
-  if (document.body.contains(successArea) && (evt.keyCode === 27 || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
+
+  if (document.body.contains(successArea) && (evt.keyCode === ESC_KEYCODE || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
     closeSuccessWindow();
-  } else if (document.body.contains(errorArea) && (evt.keyCode === 27 || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
+  } else if (document.body.contains(errorArea) && (evt.keyCode === ESC_KEYCODE || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
     closeErrorWindow();
   }
 };
 const showSuccessWindow = () => {
-  body.appendChild(successArea);
+  document.body.appendChild(successArea);
 
 
   document.addEventListener('keydown', checkNClose);
@@ -156,7 +161,7 @@ const showSuccessWindow = () => {
 
 const showErrorWindow = () => {
 
-  body.appendChild(errorArea);
+  document.body.appendChild(errorArea);
 
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
@@ -181,13 +186,16 @@ const sendFormData = (onSuccess) => {
       const formData = new FormData(evt.target);
 
       sendData(formData)
-        .then(onSuccess)
+        .then(() => {
+          imgUploadClose();
+          onSuccess();
+        })
         .catch(showErrorWindow)
-        // .then(clear)
+
         .finally(unblockButton);
 
     }
   });
 };
-// sendFormData(showSuccessWindow);
+
 export{sendFormData,showSuccessWindow};

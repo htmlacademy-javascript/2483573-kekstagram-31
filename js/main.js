@@ -6,15 +6,17 @@ import './load-photos.js';
 import './open-close-full-photo.js';
 import './new-photos-forms-handler.js';
 import './filter-redactor.js';
-// import {generatePhotosArray} from './post.js';
-// const photosArray = generatePhotosArray();
+const imgFilter = document.querySelector('.img-filters');
+
+
 getData()
   .then((loadedPhotos) => {
     console.log(loadedPhotos);
     loadPhotos(loadedPhotos);
+    imgFilter.classList.remove('img-filters--inactive');
   })
   .catch(
-    showDataErrorMessage
+    () => showDataErrorMessage()
   );
 sendFormData(showSuccessWindow);
 
