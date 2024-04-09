@@ -9,7 +9,7 @@ const imgElement = imgPreview.querySelector('img');
 const imgEffectlevel = document.querySelector('.effect-level__slider');
 const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
-imgEffectlevel.classList.add('hidden');
+
 const Settings = {
   range: {
     min: 0,
@@ -135,7 +135,7 @@ const createPhobos = (evt) => {
     imgElement.style.filter = `blur(${filterValue.toString()}px)`;
   });
 };
-
+imgEffectlevel.classList.add('hidden');
 effectChrome.addEventListener('change', createChrome);
 effectSepia.addEventListener('change', createSepia);
 effectHeat.addEventListener('change', createHeat);

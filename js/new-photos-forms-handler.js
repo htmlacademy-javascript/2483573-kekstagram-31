@@ -2,6 +2,10 @@ import { sendData } from './api';
 import { clear } from './filter-redactor';
 import { scaleDec,scaleInc } from './scale-redactor';
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAX_HASHTAGS = 5;
+const ESC_KEYCODE = 27;
+const COMMENT_MAX_LENGTH = 140;
+
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
 const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
@@ -19,8 +23,6 @@ const successArea = successWindowTemplate.cloneNode(true).querySelector('.succes
 const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
 const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 const scaleControlBigger = document.querySelector('.scale__control--bigger');
-const MAX_HASHTAGS = 5;
-const ESC_KEYCODE = 27;
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -42,8 +44,8 @@ const validateHashTagsText = (value) => {
   }
   return true;
 };
-const maxCommentLength = 140;
-const validateComments = (value) => value.length <= maxCommentLength;
+
+const validateComments = (value) => value.length <= COMMENT_MAX_LENGTH;
 const validateUniqueHashTags = (value) => {
   const hashTagsArr = value.split(' ');
   const filteredArr = hashTagsArr.filter(Boolean);
@@ -55,6 +57,7 @@ const validateUniqueHashTags = (value) => {
   }
   return true;
 };
+
 
 pristine.addValidator(
   hashTagsInput,
@@ -78,6 +81,7 @@ pristine.addValidator(
   'Максимум 5 хэштегов братик'
 );
 
+
 const imgUploadClose = () => {
   imgUploadHud.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -92,6 +96,7 @@ const imgUploadClose = () => {
   scaleControlBigger.removeEventListener('click', scaleInc);
 };
 
+
 const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
@@ -101,6 +106,8 @@ const checkOnEsc = (evt) => {
     imgUploadClose();
   }
 };
+
+
 const loadPreviews = () => {
   const file = imgUploadInput.files[0];
   const imgUrl = URL.createObjectURL(file);
@@ -111,6 +118,8 @@ const loadPreviews = () => {
 
 
 };
+
+
 const openPhotoEditor = (evt) => {
   evt.preventDefault();
   scaleControlField.value = '100%';
@@ -128,13 +137,9 @@ imgUploadInput.addEventListener('change', openPhotoEditor);
 
 
 const closeErrorWindow = () => {
-
   document.body.removeChild(errorArea);
-
-
 };
 const closeSuccessWindow = () => {
-
   document.body.removeChild(successArea);
   imgUploadClose();
 };
@@ -151,18 +156,15 @@ const checkNClose = (evt) => {
     closeErrorWindow();
   }
 };
+
 const showSuccessWindow = () => {
   document.body.appendChild(successArea);
-
-
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
 };
 
 const showErrorWindow = () => {
-
   document.body.appendChild(errorArea);
-
   document.addEventListener('keydown', checkNClose);
   document.body.addEventListener('click', checkNClose);
 };
@@ -180,7 +182,6 @@ const sendFormData = (onSuccess) => {
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
-
     if (isValid) {
       blockButton();
       const formData = new FormData(evt.target);
