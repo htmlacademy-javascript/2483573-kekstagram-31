@@ -1,18 +1,17 @@
 let commentsArr = [];
 let currentComments = 0;
-const CommentsStep = 5;
+const COMMENTS_STEP = 5;
 const socialComments = document.querySelector('.social__comments');
 const commentsCount = document.querySelector('.social__comment-count');
 const commentsLoader = document.querySelector('.comments-loader');
 socialComments.innerHTML = '';
 
-
 const loadAllComments = () => {
 
   const socialCommentFragment = document.createDocumentFragment();
   commentsCount.classList.remove('hidden');
-  const loadedComments = commentsArr.slice(currentComments, currentComments += CommentsStep);
-  //const loadedCommentsLength = loadedComments.length += CommentsStep;
+  const loadedComments = commentsArr.slice(currentComments, currentComments += COMMENTS_STEP);
+
 
   loadedComments.forEach((comment) => {
     const commentElement = document.createElement('li');

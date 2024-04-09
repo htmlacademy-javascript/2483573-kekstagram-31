@@ -6,6 +6,7 @@ const img = bigPictureElement.querySelector('img');
 const likes = document.querySelector('.likes-count');
 const caption = document.querySelector('.social__caption');
 const closeButton = document.querySelector('.big-picture__cancel');
+const ESC_KEYCODE = 27;
 const closeBigPhoto = () => {
   bigPicture.classList.add('hidden');
   document.querySelector('.social__comment-count').classList.remove('hidden');
@@ -14,7 +15,7 @@ const closeBigPhoto = () => {
   clear();
 };
 const onEsc = (evt) => {
-  if (evt.keyCode === 27) {
+  if (evt.keyCode === ESC_KEYCODE) {
     evt.preventDefault();
     closeBigPhoto();
   }

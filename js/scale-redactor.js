@@ -2,9 +2,9 @@
 const scaleControlField = document.querySelector('.scale__control--value');
 const imgPreview = document.querySelector('.img-upload__preview');
 const imgElement = imgPreview.querySelector('img');
-const scaleStep = 25;
-const scaleMin = 25;
-const scaleMax = 100;
+const SCALE_STEP = 25;
+const SCALE_MIN = 25;
+const SCALE_MAX = 100;
 
 let scaleControlFieldNum = parseInt(scaleControlField.value, 10);
 
@@ -18,8 +18,8 @@ const updateValue = () => {
 
 const scaleDec = () => {
   scaleControlFieldNum = parseInt(scaleControlField.value, 10);
-  if (scaleControlFieldNum > scaleMin) {
-    scaleControlFieldNum -= scaleStep;
+  if (scaleControlFieldNum > SCALE_MIN) {
+    scaleControlFieldNum -= SCALE_STEP;
     updateScale();
     updateValue();
   }
@@ -27,8 +27,8 @@ const scaleDec = () => {
 
 const scaleInc = () => {
   scaleControlFieldNum = parseInt(scaleControlField.value, 10);
-  if (scaleControlFieldNum < scaleMax) {
-    scaleControlFieldNum += scaleStep;
+  if (scaleControlFieldNum < SCALE_MAX) {
+    scaleControlFieldNum += SCALE_STEP;
     updateScale();
     updateValue();
   }

@@ -1,5 +1,5 @@
 import{openBigPhoto} from './open-close-full-photo.js';
-import { comparePhotos } from './util.js';
+import { ComparePhotos} from './util.js';
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const dataErrorTemplate = document.querySelector('#data-error').content;
 const disscusedButton = document.querySelector('#filter-discussed');
@@ -7,8 +7,9 @@ const randomButton = document.querySelector('#filter-random');
 const defaultButton = document.querySelector('#filter-default');
 const createdPhotosFragment = document.createDocumentFragment();
 const photosList = document.querySelector('.pictures');
-const activeClass = 'img-filters__button--active';
+const ACTIVE_CLASS = 'img-filters__button--active';
 const TIMER_DELAY = 500;
+const ERROR_MESSAGE_TIME = 5000;
 let discussedIsClicked = false;
 let randomIsClicked = false;
 let defaultIsClicked = true;
@@ -22,8 +23,8 @@ const focusRemover = () => {
   discussedIsClicked = false;
   randomIsClicked = false;
   defaultIsClicked = false;
-  disscusedButton.classList.remove(`${activeClass}`);
-  randomButton.classList.remove(`${activeClass}`);
+  disscusedButton.classList.remove(`${ACTIVE_CLASS}`);
+  randomButton.classList.remove(`${ACTIVE_CLASS}`);
 
 };
 
@@ -34,7 +35,7 @@ const setDefaultClick = () => {
     focusRemover();
     defaultIsClicked = true;
     timer = setTimeout(() => loadPhotos(), TIMER_DELAY);
-    defaultButton.classList.add(activeClass);
+    defaultButton.classList.add(ACTIVE_CLASS);
   }
 };
 
@@ -43,9 +44,9 @@ const setRandomClick = () => {
     clearTimeout(timer);
     focusRemover();
     randomIsClicked = true;
-    defaultButton.classList.remove(`${activeClass}`);
+    defaultButton.classList.remove(`${ACTIVE_CLASS}`);
     timer = setTimeout(() => loadPhotos(), TIMER_DELAY);
-    randomButton.classList.add(activeClass);
+    randomButton.classList.add(ACTIVE_CLASS);
   }
 };
 
@@ -55,8 +56,8 @@ const setDisscusedClick = () => {
     focusRemover();
     discussedIsClicked = true;
     timer = setTimeout(() => loadPhotos(), TIMER_DELAY);
-    defaultButton.classList.remove(`${activeClass}`);
-    disscusedButton.classList.add(activeClass);
+    defaultButton.classList.remove(`${ACTIVE_CLASS}`);
+    disscusedButton.classList.add(ACTIVE_CLASS);
   }
 };
 
@@ -74,9 +75,9 @@ function loadPhotos (photos) {
   clearPhotos();
   let sortedPhotos = list.slice();
   if (discussedIsClicked) {
-    sortedPhotos.sort(comparePhotos.disscused);
+    sortedPhotos.sort(ComparePhotos.disscused);
   } if (randomIsClicked) {
-    sortedPhotos = comparePhotos.random(sortedPhotos);
+    sortedPhotos = ComparePhotos.random(sortedPhotos);
   } if (defaultIsClicked){
     sortedPhotos.slice();
   }
@@ -92,8 +93,9 @@ function loadPhotos (photos) {
     photosParts.addEventListener('click', (event) => {
       const currentPicture = list.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
       openBigPhoto(currentPicture);
+    }
 
-    });
+    );
 
 
   });
@@ -105,7 +107,7 @@ const closeDataError = () => {
   dataErrorArea = document.querySelector('.data-error');
   document.body.removeChild(dataErrorArea);
 };
-const ERROR_MESSAGE_TIME = 5000;
+
 const showDataErrorMessage = () => {
   document.body.appendChild(dataErrorArea);
   setTimeout(closeDataError,ERROR_MESSAGE_TIME);

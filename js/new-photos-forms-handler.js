@@ -19,6 +19,8 @@ const successArea = successWindowTemplate.cloneNode(true).querySelector('.succes
 const errorArea = errorWindowTemplate.cloneNode(true).querySelector('.error');
 const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 const scaleControlBigger = document.querySelector('.scale__control--bigger');
+const MAX_HASHTAGS = 5;
+const ESC_KEYCODE = 27;
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -26,11 +28,11 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const hashTagsArrMaxLength = 5;
+
 const validateHashTagsNumber = (value) => {
   const hashTagsArr = value.split(' ');
   const filteredArr = hashTagsArr.filter(Boolean);
-  return filteredArr.length <= hashTagsArrMaxLength;
+  return filteredArr.length <= MAX_HASHTAGS;
 };
 const validateHashTagsText = (value) => {
   const hashTagsArr = value.split(' ');
@@ -51,7 +53,7 @@ const validateUniqueHashTags = (value) => {
   if (duplicates) {
     return false;
   }
-  return true; // Add this line to return true if no duplicates are found
+  return true;
 };
 
 pristine.addValidator(
@@ -93,8 +95,8 @@ const imgUploadClose = () => {
 const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
-const onEsc = (evt) => {
-  if (evt.keyCode === 27 && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
+const checkOnEsc = (evt) => {
+  if (evt.keyCode === ESC_KEYCODE && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
     evt.preventDefault();
     imgUploadClose();
   }
@@ -114,7 +116,7 @@ const openPhotoEditor = (evt) => {
   scaleControlField.value = '100%';
   imgUploadHud.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onEsc);
+  document.addEventListener('keydown', checkOnEsc);
   scaleControlSmaller.addEventListener('click', scaleDec);
   scaleControlBigger.addEventListener('click', scaleInc);
   clear();
@@ -123,30 +125,27 @@ const openPhotoEditor = (evt) => {
   imgUploadCloseButton.addEventListener('click', imgUploadClose);
 };
 imgUploadInput.addEventListener('change', openPhotoEditor);
-// let successArea = successWindowTemplate.cloneNode(true);
-// let errorArea = errorWindowTemplate.cloneNode(true);
 
 
 const closeErrorWindow = () => {
-  // errorArea = document.querySelector('.error');
+
   document.body.removeChild(errorArea);
-  // clear();
+
 
 };
 const closeSuccessWindow = () => {
-  // successArea = document.querySelector('.success');
+
   document.body.removeChild(successArea);
   imgUploadClose();
 };
 
 const checkNClose = (evt) => {
-  // errorArea = document.querySelector('.error');
-  // successArea = document.querySelector('.success');
-  if (document.body.contains(successArea) && (evt.keyCode === 27 || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
+
+  if (document.body.contains(successArea) && (evt.keyCode === ESC_KEYCODE || !evt.target.closest('.success__inner') || evt.target.closest('.success__button'))) {
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
     closeSuccessWindow();
-  } else if (document.body.contains(errorArea) && (evt.keyCode === 27 || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
+  } else if (document.body.contains(errorArea) && (evt.keyCode === ESC_KEYCODE || !evt.target.closest('.error__inner') || evt.target.closest('.error__button'))) {
     document.removeEventListener('keydown', checkNClose);
     document.body.removeEventListener('click', checkNClose);
     closeErrorWindow();
@@ -192,11 +191,11 @@ const sendFormData = (onSuccess) => {
           onSuccess();
         })
         .catch(showErrorWindow)
-        // .then(clear)
+
         .finally(unblockButton);
 
     }
   });
 };
-// sendFormData(showSuccessWindow);
+
 export{sendFormData,showSuccessWindow};

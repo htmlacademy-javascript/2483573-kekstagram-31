@@ -10,7 +10,7 @@ const imgEffectlevel = document.querySelector('.effect-level__slider');
 const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 imgEffectlevel.classList.add('hidden');
-const settings = {
+const Settings = {
   range: {
     min: 0,
     max: 100,
@@ -19,7 +19,7 @@ const settings = {
   start: 100,
 };
 
-noUiSlider.create(imgEffectlevel, settings);
+noUiSlider.create(imgEffectlevel, Settings);
 let filterValue = effectLevelValue.value;
 
 const show = () => {
