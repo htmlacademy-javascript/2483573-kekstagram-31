@@ -7,23 +7,23 @@ const likes = document.querySelector('.likes-count');
 const caption = document.querySelector('.social__caption');
 const closeButton = document.querySelector('.big-picture__cancel');
 
-const closeBigPhoto = () => {
+const bigPhotoCloseHandler = () => {
   bigPicture.classList.add('hidden');
   document.querySelector('.social__comment-count').classList.remove('hidden');
   document.querySelector('.comments-loader').classList.remove('hidden');
   document.body.classList.remove('modal-open');
-  closeButton.removeEventListener('click',closeBigPhoto);
+  closeButton.removeEventListener('click',bigPhotoCloseHandler);
   clear();
 };
 const onEsc = (evt) => {
   if (evt.keyCode === ESC_KEYCODE) {
     evt.preventDefault();
-    closeBigPhoto();
+    bigPhotoCloseHandler();
   }
 };
 
 
-const openBigPhoto = (photo) => {
+const bigPhotoOpenHandler = (photo) => {
   bigPicture.classList.remove('hidden');
   img.src = photo.url;
   likes.textContent = photo.likes;
@@ -33,5 +33,5 @@ const openBigPhoto = (photo) => {
   document.addEventListener('keydown', onEsc);
 
 };
-closeButton.addEventListener('click', closeBigPhoto);
-export { openBigPhoto };
+closeButton.addEventListener('click', bigPhotoCloseHandler);
+export { bigPhotoOpenHandler };
