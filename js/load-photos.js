@@ -1,5 +1,8 @@
-import{openBigPhoto} from './open-close-full-photo.js';
+import{bigPhotoOpenHandler} from './open-close-full-photo.js';
 import { ComparePhotos} from './util.js';
+const ACTIVE_CLASS = 'img-filters__button--active';
+const TIMER_DELAY = 500;
+const ERROR_MESSAGE_TIME = 5000;
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const dataErrorTemplate = document.querySelector('#data-error').content;
 const disscusedButton = document.querySelector('#filter-discussed');
@@ -7,13 +10,13 @@ const randomButton = document.querySelector('#filter-random');
 const defaultButton = document.querySelector('#filter-default');
 const createdPhotosFragment = document.createDocumentFragment();
 const photosList = document.querySelector('.pictures');
-const ACTIVE_CLASS = 'img-filters__button--active';
-const TIMER_DELAY = 500;
-const ERROR_MESSAGE_TIME = 5000;
+
 let discussedIsClicked = false;
 let randomIsClicked = false;
 let defaultIsClicked = true;
 let timer;
+let list = [];
+
 const clearPhotos = () => {
   const pictures = document.querySelectorAll('.picture');
   pictures.forEach((picture) => picture.remove());
@@ -29,7 +32,7 @@ const focusRemover = () => {
 };
 
 
-const setDefaultClick = () => {
+const onDefaultClick = () => {
   if (!defaultIsClicked) {
     clearTimeout(timer);
     focusRemover();
@@ -39,7 +42,7 @@ const setDefaultClick = () => {
   }
 };
 
-const setRandomClick = () => {
+const onRandomClick = () => {
   if (!randomIsClicked) {
     clearTimeout(timer);
     focusRemover();
@@ -50,7 +53,7 @@ const setRandomClick = () => {
   }
 };
 
-const setDisscusedClick = () => {
+const onDisscusedClick = () => {
   if (!discussedIsClicked) {
     clearTimeout(timer);
     focusRemover();
@@ -62,11 +65,10 @@ const setDisscusedClick = () => {
 };
 
 
-disscusedButton.addEventListener('click', setDisscusedClick);
-defaultButton.addEventListener('click', setDefaultClick);
-randomButton.addEventListener('click', setRandomClick);
+disscusedButton.addEventListener('click', onDisscusedClick);
+defaultButton.addEventListener('click', onDefaultClick);
+randomButton.addEventListener('click', onRandomClick);
 
-let list = [];
 
 function loadPhotos (photos) {
   if (photos){
@@ -92,7 +94,7 @@ function loadPhotos (photos) {
     createdPhotosFragment.append(photosParts);
     photosParts.addEventListener('click', (event) => {
       const currentPicture = list.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
-      openBigPhoto(currentPicture);
+      bigPhotoOpenHandler(currentPicture);
     }
 
     );
@@ -114,4 +116,4 @@ const showDataErrorMessage = () => {
 
 };
 
-export{loadPhotos,showDataErrorMessage,setDefaultClick,setDisscusedClick,setRandomClick};
+export{loadPhotos,showDataErrorMessage,onDefaultClick,onDisscusedClick,onRandomClick};

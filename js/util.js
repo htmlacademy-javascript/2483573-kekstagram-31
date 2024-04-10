@@ -1,8 +1,8 @@
 const uniqueNumbersSet = new Set();
 
-const getRandomNumber = function(a, b) {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+const getRandomNumber = function(randomMin, randomMax) {
+  const lower = Math.ceil(Math.min(randomMin, randomMax));
+  const upper = Math.floor(Math.max(randomMin, randomMax));
   let randomNumber;
   do {
     randomNumber = Math.floor(Math.random() * (upper - lower + 1) + lower);
