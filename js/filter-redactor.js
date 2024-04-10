@@ -19,7 +19,7 @@ const Settings = {
   start: 100,
 };
 
-
+noUiSlider.create(imgEffectlevel, Settings);
 let filterValue = effectLevelValue.value;
 
 const show = () => {
@@ -141,7 +141,7 @@ const clear = () => {
       imgElement.style.filter = `blur(${filterValue.toString()}px)`;
     });
   };
-  noUiSlider.create(imgEffectlevel, Settings);
+
   hide();
   imgEffectlevel.classList.add('hidden');
   effectChrome.addEventListener('change', chromeClickHandler);

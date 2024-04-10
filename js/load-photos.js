@@ -1,4 +1,4 @@
-import{openBigPhotoHandler} from './open-close-full-photo.js';
+import{bigPhotoOpenHandler} from './open-close-full-photo.js';
 import { ComparePhotos} from './util.js';
 const ACTIVE_CLASS = 'img-filters__button--active';
 const TIMER_DELAY = 500;
@@ -94,7 +94,7 @@ function loadPhotos (photos) {
     createdPhotosFragment.append(photosParts);
     photosParts.addEventListener('click', (event) => {
       const currentPicture = list.find((photo) => event.currentTarget.dataset.id === photo.id.toString());
-      openBigPhotoHandler(currentPicture);
+      bigPhotoOpenHandler(currentPicture);
     }
 
     );
