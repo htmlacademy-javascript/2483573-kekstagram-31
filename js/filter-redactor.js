@@ -1,3 +1,57 @@
+const Settings = {
+  range: {
+    min: 0,
+    max: 100,
+  },
+  step: 1,
+  start: 100,
+};
+
+const ChromeFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 1,
+  },
+  step: 0.1,
+  start: 1,
+};
+const SepiaFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 1,
+  },
+  step: 0.1,
+  start: 1,
+};
+const HeatFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 3,
+  },
+  step: 0.1,
+  start: 3,
+};
+const MarvinFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 100,
+  },
+  step: 1,
+  start: 100,
+};
+const PhobosFilter = {
+  connect: 'lower',
+  range: {
+    min: 0,
+    max: 3,
+  },
+  step: 0.1,
+  start: 3,
+};
 const effectNone = document.querySelector('#effect-none');
 const effectChrome = document.querySelector('#effect-chrome');
 const effectSepia = document.querySelector('#effect-sepia');
@@ -10,14 +64,6 @@ const imgEffectlevel = document.querySelector('.effect-level__slider');
 const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
-const Settings = {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  step: 1,
-  start: 100,
-};
 
 noUiSlider.create(imgEffectlevel, Settings);
 let filterValue = effectLevelValue.value;
@@ -27,7 +73,7 @@ const show = () => {
   imgEffectlevel.classList.remove('hidden');
   imgEffectContainer.classList.remove('hidden');
 };
-const hide = () => {
+const uiSliderhideHandler = () => {
   imgElement.style.filter = 'none ';
   imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
@@ -36,55 +82,8 @@ const hide = () => {
 const clear = () => {
   filterValue = '';
   imgElement.style.filter = 'none';
-  hide();
+  uiSliderhideHandler();
   effectNone.checked = true;
-
-
-  const ChromeFilter = {
-    connect: 'lower',
-    range: {
-      min: 0,
-      max: 1,
-    },
-    step: 0.1,
-    start: 1,
-  };
-  const SepiaFilter = {
-    connect: 'lower',
-    range: {
-      min: 0,
-      max: 1,
-    },
-    step: 0.1,
-    start: 1,
-  };
-  const HeatFilter = {
-    connect: 'lower',
-    range: {
-      min: 0,
-      max: 3,
-    },
-    step: 0.1,
-    start: 3,
-  };
-  const MarvinFilter = {
-    connect: 'lower',
-    range: {
-      min: 0,
-      max: 100,
-    },
-    step: 1,
-    start: 100,
-  };
-  const PhobosFilter = {
-    connect: 'lower',
-    range: {
-      min: 0,
-      max: 3,
-    },
-    step: 0.1,
-    start: 3,
-  };
 
 
   const chromeClickHandler = (evt) => {
@@ -142,13 +141,13 @@ const clear = () => {
     });
   };
 
-  hide();
+  uiSliderhideHandler();
   imgEffectlevel.classList.add('hidden');
   effectChrome.addEventListener('change', chromeClickHandler);
   effectSepia.addEventListener('change', sepiaClickHandler);
   effectHeat.addEventListener('change', heatClickHandler);
   effectMarvin.addEventListener('change', marvinClickHandler);
-  effectNone.addEventListener('change', hide);
+  effectNone.addEventListener('change', uiSliderhideHandler);
   effectPhobos.addEventListener('change', phobosClickHandler);
 
 };

@@ -31,7 +31,7 @@ const bigPhotoOpenHandler = (photo) => {
   loadComments(photo.comments);
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onEsc);
-
+  closeButton.addEventListener('click', bigPhotoCloseHandler);
 };
-closeButton.addEventListener('click', bigPhotoCloseHandler);
+
 export { bigPhotoOpenHandler };
