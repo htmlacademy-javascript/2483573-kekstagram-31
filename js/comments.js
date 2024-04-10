@@ -6,7 +6,7 @@ const commentsCount = document.querySelector('.social__comment-count');
 const commentsLoader = document.querySelector('.comments-loader');
 socialComments.innerHTML = '';
 
-const loadAllComments = () => {
+const loadAllCommentsHandler = () => {
 
   const socialCommentFragment = document.createDocumentFragment();
   commentsCount.classList.remove('hidden');
@@ -37,12 +37,12 @@ const clear = () => {
   socialComments.innerHTML = '';
   commentsLoader.classList.remove('hidden');
   currentComments = 0;
-  commentsLoader.removeEventListener('click', loadAllComments);
+  commentsLoader.removeEventListener('click', loadAllCommentsHandler);
 
 };
 const loadComments = (comments) => {
   commentsArr = comments;
-  loadAllComments();
-  commentsLoader.addEventListener('click', loadAllComments);
+  loadAllCommentsHandler();
+  commentsLoader.addEventListener('click', loadAllCommentsHandler);
 };
 export{clear,loadComments};

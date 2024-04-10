@@ -15,6 +15,7 @@ let discussedIsClicked = false;
 let randomIsClicked = false;
 let defaultIsClicked = true;
 let timer;
+let list = [];
 
 const clearPhotos = () => {
   const pictures = document.querySelectorAll('.picture');
@@ -31,7 +32,7 @@ const focusRemover = () => {
 };
 
 
-const setDefaultClick = () => {
+const onDefaultClick = () => {
   if (!defaultIsClicked) {
     clearTimeout(timer);
     focusRemover();
@@ -41,7 +42,7 @@ const setDefaultClick = () => {
   }
 };
 
-const setRandomClick = () => {
+const onRandomClick = () => {
   if (!randomIsClicked) {
     clearTimeout(timer);
     focusRemover();
@@ -52,7 +53,7 @@ const setRandomClick = () => {
   }
 };
 
-const setDisscusedClick = () => {
+const onDisscusedClick = () => {
   if (!discussedIsClicked) {
     clearTimeout(timer);
     focusRemover();
@@ -64,11 +65,10 @@ const setDisscusedClick = () => {
 };
 
 
-disscusedButton.addEventListener('click', setDisscusedClick);
-defaultButton.addEventListener('click', setDefaultClick);
-randomButton.addEventListener('click', setRandomClick);
+disscusedButton.addEventListener('click', onDisscusedClick);
+defaultButton.addEventListener('click', onDefaultClick);
+randomButton.addEventListener('click', onRandomClick);
 
-let list = [];
 
 function loadPhotos (photos) {
   if (photos){
@@ -116,4 +116,4 @@ const showDataErrorMessage = () => {
 
 };
 
-export{loadPhotos,showDataErrorMessage,setDefaultClick,setDisscusedClick,setRandomClick};
+export{loadPhotos,showDataErrorMessage,onDefaultClick,onDisscusedClick,onRandomClick};
