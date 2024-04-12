@@ -52,6 +52,7 @@ const PhobosFilter = {
   step: 0.1,
   start: 3,
 };
+const effectsInput = document.querySelectorAll('.effects__radio');
 const effectNone = document.querySelector('#effect-none');
 const effectChrome = document.querySelector('#effect-chrome');
 const effectSepia = document.querySelector('#effect-sepia');
@@ -65,7 +66,7 @@ const imgEffectContainer = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
 
-noUiSlider.create(imgEffectlevel, Settings);
+// noUiSlider.create(imgEffectlevel, Settings);
 let filterValue = effectLevelValue.value;
 
 const show = () => {
@@ -73,7 +74,7 @@ const show = () => {
   imgEffectlevel.classList.remove('hidden');
   imgEffectContainer.classList.remove('hidden');
 };
-const uiSliderhideHandler = () => {
+const uiSliderHideHandler = () => {
   imgElement.style.filter = 'none ';
   imgEffectlevel.setAttribute('disabled', true);
   imgEffectlevel.classList.add('hidden');
@@ -82,12 +83,14 @@ const uiSliderhideHandler = () => {
 const clear = () => {
   filterValue = '';
   imgElement.style.filter = 'none';
-  uiSliderhideHandler();
+  uiSliderHideHandler();
   effectNone.checked = true;
-
-
-  const chromeClickHandler = (evt) => {
-    evt.preventDefault();
+};
+noUiSlider.create(imgEffectlevel, Settings);
+const changeFilterHandler = (evt) => {
+  evt.preventDefault();
+  // imgEffectlevel.noUiSlider.destroy();
+  if(effectChrome.checked){
     imgEffectlevel.noUiSlider.destroy();
     noUiSlider.create(imgEffectlevel, ChromeFilter);
     show();
@@ -96,9 +99,8 @@ const clear = () => {
       imgElement.style.filter = `grayscale(${filterValue.toString()})`;
       effectLevelValue.value = filterValue;
     });
-  };
-  const sepiaClickHandler = (evt) => {
-    evt.preventDefault();
+  }
+  if(effectSepia.checked){
     imgEffectlevel.noUiSlider.destroy();
     noUiSlider.create(imgEffectlevel, SepiaFilter);
     show();
@@ -107,9 +109,8 @@ const clear = () => {
       imgElement.style.filter = `sepia(${filterValue.toString()})`;
       effectLevelValue.value = filterValue;
     });
-  };
-  const heatClickHandler = (evt) => {
-    evt.preventDefault();
+  }
+  if(effectHeat.checked){
     imgEffectlevel.noUiSlider.destroy();
     noUiSlider.create(imgEffectlevel, HeatFilter);
     show();
@@ -118,9 +119,8 @@ const clear = () => {
       imgElement.style.filter = ` brightness(${filterValue.toString()})`;
       effectLevelValue.value = filterValue;
     });
-  };
-  const marvinClickHandler = (evt) => {
-    evt.preventDefault();
+  }
+  if(effectMarvin.checked){
     imgEffectlevel.noUiSlider.destroy();
     noUiSlider.create(imgEffectlevel, MarvinFilter);
     show();
@@ -129,9 +129,8 @@ const clear = () => {
       imgElement.style.filter = `invert(${filterValue.toString()}%)`;
       effectLevelValue.value = filterValue;
     });
-  };
-  const phobosClickHandler = (evt) => {
-    evt.preventDefault();
+  }
+  if(effectPhobos.checked){
     imgEffectlevel.noUiSlider.destroy();
     noUiSlider.create(imgEffectlevel, PhobosFilter);
     show();
@@ -139,16 +138,80 @@ const clear = () => {
       filterValue = +imgEffectlevel.noUiSlider.get();
       imgElement.style.filter = `blur(${filterValue.toString()}px)`;
     });
-  };
-
-  uiSliderhideHandler();
-  imgEffectlevel.classList.add('hidden');
-  effectChrome.addEventListener('change', chromeClickHandler);
-  effectSepia.addEventListener('change', sepiaClickHandler);
-  effectHeat.addEventListener('change', heatClickHandler);
-  effectMarvin.addEventListener('change', marvinClickHandler);
-  effectNone.addEventListener('change', uiSliderhideHandler);
-  effectPhobos.addEventListener('change', phobosClickHandler);
-
+  }
+  if(effectNone.checked){
+    uiSliderHideHandler();
+  }
 };
+
+
+// const chromeClickHandler = (evt) => {
+//   evt.preventDefault();
+//   imgEffectlevel.noUiSlider.destroy();
+//   noUiSlider.create(imgEffectlevel, ChromeFilter);
+//   show();
+//   imgEffectlevel.noUiSlider.on('update', () => {
+//     filterValue = +imgEffectlevel.noUiSlider.get();
+//     imgElement.style.filter = `grayscale(${filterValue.toString()})`;
+//     effectLevelValue.value = filterValue;
+//   });
+// };
+// const sepiaClickHandler = (evt) => {
+//   evt.preventDefault();
+//   imgEffectlevel.noUiSlider.destroy();
+//   noUiSlider.create(imgEffectlevel, SepiaFilter);
+//   show();
+//   imgEffectlevel.noUiSlider.on('update', () => {
+//     filterValue = +imgEffectlevel.noUiSlider.get();
+//     imgElement.style.filter = `sepia(${filterValue.toString()})`;
+//     effectLevelValue.value = filterValue;
+//   });
+// };
+// const heatClickHandler = (evt) => {
+//   evt.preventDefault();
+//   imgEffectlevel.noUiSlider.destroy();
+//   noUiSlider.create(imgEffectlevel, HeatFilter);
+//   show();
+//   imgEffectlevel.noUiSlider.on('update', () => {
+//     filterValue = +imgEffectlevel.noUiSlider.get();
+//     imgElement.style.filter = ` brightness(${filterValue.toString()})`;
+//     effectLevelValue.value = filterValue;
+//   });
+// };
+// const marvinClickHandler = (evt) => {
+//   evt.preventDefault();
+//   imgEffectlevel.noUiSlider.destroy();
+//   noUiSlider.create(imgEffectlevel, MarvinFilter);
+//   show();
+//   imgEffectlevel.noUiSlider.on('update', () => {
+//     filterValue = +imgEffectlevel.noUiSlider.get();
+//     imgElement.style.filter = `invert(${filterValue.toString()}%)`;
+//     effectLevelValue.value = filterValue;
+//   });
+// };
+// const phobosClickHandler = (evt) => {
+//   evt.preventDefault();
+//   imgEffectlevel.noUiSlider.destroy();
+//   noUiSlider.create(imgEffectlevel, PhobosFilter);
+//   show();
+//   imgEffectlevel.noUiSlider.on('update', () => {
+//     filterValue = +imgEffectlevel.noUiSlider.get();
+//     imgElement.style.filter = `blur(${filterValue.toString()}px)`;
+//   });
+// };
+
+uiSliderHideHandler();
+imgEffectlevel.classList.add('hidden');
+// effectChrome.addEventListener('change', chromeClickHandler);
+// effectSepia.addEventListener('change', sepiaClickHandler);
+// effectHeat.addEventListener('change', heatClickHandler);
+// effectMarvin.addEventListener('change', marvinClickHandler);
+//   // effectNone.addEventListener('change', uiSliderHideHandler);
+//   // effectPhobos.addEventListener('change', phobosClickHandler);
+effectsInput.forEach((item) => {
+  item.addEventListener('change', changeFilterHandler);
+});
+
+
+// };
 export{clear};

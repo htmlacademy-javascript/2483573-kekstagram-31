@@ -1,11 +1,11 @@
 import { sendData } from './api';
 import { clear } from './filter-redactor';
 import { onScaleDec,onScaleInc } from './scale-redactor';
-const regex = /^#[a-zа-яё0-9]{1,19}$/i;
+
 const MAX_HASHTAGS = 5;
 const ESC_KEYCODE = 27;
 const COMMENT_MAX_LENGTH = 140;
-
+const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
 const closeUploadModalButton = document.querySelector('.img-upload__cancel');
