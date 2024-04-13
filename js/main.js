@@ -4,7 +4,6 @@ import { sendFormData , showSuccessWindow} from './new-photos-forms-handler.js';
 import { getData } from './api.js';
 
 const imgFilter = document.querySelector('.img-filters');
-
 getData()
   .then((loadedPhotos) => {
     loadPhotos(loadedPhotos);
