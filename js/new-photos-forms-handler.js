@@ -8,7 +8,7 @@ const COMMENT_MAX_LENGTH = 140;
 const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
-const closeUploadModalButton = document.querySelector('.img-upload__cancel');
+const closeUploadModalHandlerButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
@@ -79,7 +79,7 @@ pristine.addValidator(
 );
 
 
-const closeUploadModal = () => {
+const closeUploadModalHandler = () => {
   imgUploadHud.classList.add('hidden');
   document.body.classList.remove('modal-open');
   imgUploadInput.value = '';
@@ -100,7 +100,7 @@ const checkFocusOnInputFields = () =>
 const escKeydownHandler = (evt) => {
   if (evt.keyCode === ESC_KEYCODE && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
     evt.preventDefault();
-    closeUploadModal();
+    closeUploadModalHandler();
   }
 };
 
@@ -128,7 +128,7 @@ const uploadModalOpenHandler = (evt) => {
   clear();
   loadPreviews();
 
-  closeUploadModalButton.addEventListener('click', closeUploadModal);
+  closeUploadModalHandlerButton.addEventListener('click', closeUploadModalHandler);
 };
 imgUploadInput.addEventListener('change', uploadModalOpenHandler);
 
@@ -138,7 +138,7 @@ const closeErrorWindow = () => {
 };
 const closeSuccessWindow = () => {
   document.body.removeChild(successArea);
-  closeUploadModal();
+  closeUploadModalHandler();
 };
 
 const submitAreasHandler = (evt) => {
@@ -185,7 +185,7 @@ const sendFormData = (onSuccess) => {
 
       sendData(formData)
         .then(() => {
-          closeUploadModal();
+          closeUploadModalHandler();
           onSuccess();
         })
         .catch(showErrorWindow)
