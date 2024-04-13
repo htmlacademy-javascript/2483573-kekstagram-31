@@ -1,14 +1,14 @@
 import { sendData } from './api';
 import { clear } from './filter-redactor';
 import { onScaleDec,onScaleInc } from './scale-redactor';
-const regex = /^#[a-zа-яё0-9]{1,19}$/i;
+
 const MAX_HASHTAGS = 5;
 const ESC_KEYCODE = 27;
 const COMMENT_MAX_LENGTH = 140;
-
+const regex = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadHud = document.querySelector('.img-upload__overlay');
-const imgUploadCloseButton = document.querySelector('.img-upload__cancel');
+const closeUploadModalHandlerButton = document.querySelector('.img-upload__cancel');
 const hashTagsInput = document.querySelector('.text__hashtags');
 const uploadForm = document.querySelector('.img-upload__form');
 const commentTextArea = document.querySelector('.text__description');
@@ -52,10 +52,7 @@ const validateUniqueHashTags = (value) => {
   const lowerCaseHashTagsArr = filteredArr.map((tag) => tag.toLowerCase());
   const duplicates =
     new Set(lowerCaseHashTagsArr).size !== lowerCaseHashTagsArr.length;
-  if (duplicates) {
-    return false;
-  }
-  return true;
+  return !duplicates;
 };
 
 
@@ -82,7 +79,7 @@ pristine.addValidator(
 );
 
 
-const imgUploadClose = () => {
+const closeUploadModalHandler = () => {
   imgUploadHud.classList.add('hidden');
   document.body.classList.remove('modal-open');
   imgUploadInput.value = '';
@@ -100,10 +97,10 @@ const imgUploadClose = () => {
 const checkFocusOnInputFields = () =>
   document.activeElement === hashTagsInput ||
   document.activeElement === commentTextArea;
-const checkOnEsc = (evt) => {
+const escKeydownHandler = (evt) => {
   if (evt.keyCode === ESC_KEYCODE && !checkFocusOnInputFields() && !document.body.contains(errorArea)) {
     evt.preventDefault();
-    imgUploadClose();
+    closeUploadModalHandler();
   }
 };
 
@@ -120,20 +117,20 @@ const loadPreviews = () => {
 };
 
 
-const openPhotoEditor = (evt) => {
+const uploadModalOpenHandler = (evt) => {
   evt.preventDefault();
   scaleControlField.value = '100%';
   imgUploadHud.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  document.addEventListener('keydown', checkOnEsc);
+  document.addEventListener('keydown', escKeydownHandler);
   scaleControlSmaller.addEventListener('click', onScaleDec);
   scaleControlBigger.addEventListener('click', onScaleInc);
   clear();
   loadPreviews();
 
-  imgUploadCloseButton.addEventListener('click', imgUploadClose);
+  closeUploadModalHandlerButton.addEventListener('click', closeUploadModalHandler);
 };
-imgUploadInput.addEventListener('change', openPhotoEditor);
+imgUploadInput.addEventListener('change', uploadModalOpenHandler);
 
 
 const closeErrorWindow = () => {
@@ -141,7 +138,7 @@ const closeErrorWindow = () => {
 };
 const closeSuccessWindow = () => {
   document.body.removeChild(successArea);
-  imgUploadClose();
+  closeUploadModalHandler();
 };
 
 const submitAreasHandler = (evt) => {
@@ -188,7 +185,7 @@ const sendFormData = (onSuccess) => {
 
       sendData(formData)
         .then(() => {
-          imgUploadClose();
+          closeUploadModalHandler();
           onSuccess();
         })
         .catch(showErrorWindow)
