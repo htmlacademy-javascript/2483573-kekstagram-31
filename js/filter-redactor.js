@@ -130,5 +130,4 @@ effectsInput.forEach((item) => {
   item.addEventListener('change', changeFilterHandler);
 });
 
-
 export{clear};
